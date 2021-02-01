@@ -37,6 +37,7 @@ function createWindow () {
 
   // Make the popup window for the menubar
   window = new BrowserWindow({
+    // width: 2000,
     maxWidth: 400,
     resizable: true,
     minHeight: 400,
@@ -84,7 +85,7 @@ function showWindow () {
     y = Math.round(trayPos.y + trayPos.height * 10)
   }
 
-  window.setPosition(x, y, false)
+  window.setPosition(x, y + 20, false)
   window.setVisibleOnAllWorkspaces(true)
   window.show()
   window.focus()
