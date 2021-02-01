@@ -37,11 +37,11 @@ function createWindow () {
 
   // Make the popup window for the menubar
   window = new BrowserWindow({
-    width: 325,
-    height: 400,
+    maxWidth: 400,
+    resizable: true,
+    minHeight: 400,
     show: false,
     frame: false,
-    resizable: false,
     webPreferences: {
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
