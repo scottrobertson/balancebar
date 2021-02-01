@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow, ipcMain, Tray, nativeImage, nativeTheme } from 'electron'
+import { app, BrowserWindow, ipcMain, Tray, nativeImage, nativeTheme, Menu } from 'electron'
 
 let tray
 let window
@@ -23,6 +23,20 @@ function createWindow () {
   // Setup the menubar with an icon
   let icon = nativeImage.createFromDataURL(base64Icon)
   tray = new Tray(icon)
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Quit',
+      type: 'normal',
+      click: () => {
+        app.quit()
+      }
+    }
+  ])
+
+  tray.on('right-click', (event, bounds) => {
+    tray.popUpContextMenu(contextMenu)
+  })
 
   // Add a click handler so that when the user clicks on the menubar icon, it shows
   // our popup window
