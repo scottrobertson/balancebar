@@ -11,6 +11,11 @@ export default new Router({
       component: require('@/components/index').default
     },
     {
+      path: '/truelayer',
+      name: 'truelayer',
+      component: require('@/components/truelayer').default
+    },
+    {
       path: '*',
       redirect: '/'
     }

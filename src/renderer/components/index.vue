@@ -9,7 +9,7 @@
             </h3>
           </div>
           <div class="ml-4 mt-2 flex-shrink-0 pt-2">
-            <button type="button" class="relative inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <button @click="startTrueLayerAuth" type="button" class="relative inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
               Add
             </button>
           </div>
@@ -41,8 +41,8 @@
       </div>
     </div>
 
-    <div class="h-10 text-center">
-      <span class=" text-xs text-gray-400">Updated: {{ lastRefeshedAt }} </span> <a href="#" @click="refreshAccounts" class="text-center text-xs text-gray-400 underline">Refresh</a>
+    <div class="h-10 text-center text-gray-400">
+      <span class=" text-xs ">Updated: {{ lastRefeshedAt }} - </span> <a href="#" @click="refreshAccounts" class="text-center text-xs underline">Refresh</a> - <a href="#" @click="resetTrueLayer" class="text-center text-xs underline">Reset</a>
     </div>
   </div>
 
@@ -54,10 +54,17 @@
     name: 'landing-page',
 
     mounted () {
-      this.refreshAccounts()
+      if (this.hasTruelayerCredentials) {
+        this.refreshAccounts()
+      } else {
+        this.$router.push('/truelayer')
+      }
     },
 
     computed: {
+      hasTruelayerCredentials () {
+        return this.$store.getters.hasTruelayerCredentials
+      },
       credentials () {
         return this.$store.getters.allCredentials
       },
@@ -65,13 +72,23 @@
         return this.$store.getters.allAccounts
       },
       lastRefeshedAt () {
-        return this.$store.getters.lastRefeshedAt ? this.$store.getters.lastRefeshedAt.toLocaleTimeString() : 'never'
+        // return this.$store.getters.lastRefeshedAt ? this.$store.getters.lastRefeshedAt.toLocaleTimeString() : 'never'
+      },
+      redirectUrl () {
+        return 'https://example.com'
       }
     },
 
     methods: {
       refreshAccounts () {
         this.$store.dispatch('refreshAccounts')
+      },
+      resetTrueLayer () {
+        this.$store.dispatch('resetTrueLayerCredentials')
+        this.$router.push('/truelayer')
+      },
+      startTrueLayerAuth () {
+        this.$electron.shell.openExternal(`https://auth.truelayer.com/?response_type=code&client_id=${this.$store.getters.truelayerClientId}&scope=info%20accounts%20balance%20transactions%20cards%20direct_debits%20standing_orders%20offline_access&redirect_uri=${this.redirectUrl}&providers=uk-ob-all%20uk-oauth-all`)
       }
     }
 

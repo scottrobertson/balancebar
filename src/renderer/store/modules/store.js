@@ -1,6 +1,8 @@
 const state = {
-  accounts: null,
-  lastRefeshedAt: null,
+  accounts: undefined,
+  lastRefeshedAt: undefined,
+  truelayerClientId: undefined,
+  truelayerClientSecret: undefined,
   credentials: [{
     credentials_id: '123',
     provider: {
@@ -21,11 +23,11 @@ const state = {
 
 const mutations = {
   resetAccounts (state) {
-    state.accounts = null
+    state.accounts = undefined
   },
 
   addAccount (state, account) {
-    if (state.accounts === null) {
+    if (state.accounts === undefined) {
       state.accounts = []
     }
 
@@ -34,10 +36,23 @@ const mutations = {
 
   setLastRefeshedAt (state, timestamp) {
     state.lastRefeshedAt = timestamp
+  },
+
+  setTrueLayerCredentials (state, clientId, clientSecret) {
+    state.truelayerClientId = clientId
+    state.truelayerClientSecret = clientSecret
   }
 }
 
 const actions = {
+  resetTrueLayerCredentials ({ commit }) {
+    commit('setTrueLayerCredentials', undefined, undefined)
+  },
+
+  setTrueLayerCredentials ({ commit }, clientId, clientSecret) {
+    commit('setTrueLayerCredentials', clientId, clientSecret)
+  },
+
   refreshAccounts ({ state, commit }) {
     commit('resetAccounts')
 
@@ -83,6 +98,12 @@ const getters = {
   },
   lastRefeshedAt (state) {
     return state.lastRefeshedAt
+  },
+  hasTruelayerCredentials (state) {
+    return state.truelayerClientId !== undefined
+  },
+  truelayerClientId (state) {
+    return state.truelayerClientId
   }
 }
 
