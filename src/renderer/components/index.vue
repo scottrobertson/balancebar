@@ -72,7 +72,11 @@
         return this.$store.getters.allAccounts
       },
       lastRefeshedAt () {
-        // return this.$store.getters.lastRefeshedAt ? this.$store.getters.lastRefeshedAt.toLocaleTimeString() : 'never'
+        if (this.$store.getters.lastRefeshedAt) {
+          return this.$store.getters.lastRefeshedAt.toLocaleTimeString()
+        } else {
+          return 'never'
+        }
       },
       redirectUrl () {
         return 'https://example.com'
