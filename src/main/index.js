@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow, ipcMain, Tray, nativeImage } from 'electron'
+import { app, BrowserWindow, ipcMain, Tray, nativeImage, nativeTheme } from 'electron'
 
 let tray
 let window
@@ -52,6 +52,19 @@ function createWindow () {
   })
 
   window.loadURL(winURL)
+
+  ipcMain.handle('dark-mode:toggle', () => {
+    if (nativeTheme.shouldUseDarkColors) {
+      nativeTheme.themeSource = 'light'
+    } else {
+      nativeTheme.themeSource = 'dark'
+    }
+    return nativeTheme.shouldUseDarkColors
+  })
+
+  ipcMain.handle('dark-mode:system', () => {
+    nativeTheme.themeSource = 'system'
+  })
 
   window.on('blur', () => {
     if (!window.webContents.isDevToolsOpened()) {

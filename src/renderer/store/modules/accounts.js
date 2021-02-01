@@ -5,8 +5,16 @@ const state = {
     credentials_id: '123',
     provider: {
       display_name: 'Lloyds',
-      icon_url: 'https://truelayer-provider-assets.s3.amazonaws.com/global/logos/lloyds.svg',
+      icon_url: 'https://truelayer-provider-assets.s3.amazonaws.com/global/icons/lloyds.svg',
       provider_id: 'ob-lloyds'
+    }
+  },
+  {
+    credentials_id: '123',
+    provider: {
+      display_name: 'Barclaycard',
+      icon_url: 'https://truelayer-provider-assets.s3.amazonaws.com/global/icons/barclaycard.svg',
+      provider_id: 'ob-barclaycard'
     }
   }]
 }

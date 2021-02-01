@@ -1,14 +1,14 @@
 <template>
-  <div class="flex flex-col h-screen justify-between">
+  <div class="flex flex-col h-screen justify-between dark:bg-black">
     <div class="h-10">
-      <div class="bg-white px-4 py-3 border-b border-gray-200">
+      <div class="bg-white px-4 py-3 border-b border-gray-200 dark:bg-black dark:border-gray-800 pb-5">
         <div class="-ml-4 -mt-2 flex items-center justify-between flex-wrap">
           <div class="ml-4 mt-2">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white pt-2">
               Balances
             </h3>
           </div>
-          <div class="ml-4 mt-2 flex-shrink-0">
+          <div class="ml-4 mt-2 flex-shrink-0 pt-2">
             <button type="button" class="relative inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
               Add
             </button>
@@ -17,15 +17,15 @@
       </div>
     </div>
 
-    <div class="h-10 mb-auto mt-5">
+    <div class="h-10 mb-auto mt-8">
       <div v-if="credentials">
         <div v-if="accounts">
-          <ul class="divide-y divide-gray-200">
-            <li class="p-5 flex" v-for="account in accounts" :key="account.id">
-              <img class="h-10 w-10 rounded-full" :src="account.bank.logo" alt="">
+          <ul class="divide-y divide-gray-200 dark:divide-gray-800">
+            <li class="p-5 flex hover:bg-white dark:hover:bg-gray-900" v-for="account in accounts" :key="account.id">
+              <img class="h-10 w-10 dark:bg-white" :src="account.bank.logo" alt="">
               <div class="ml-3">
-                <p class="text-sm font-medium text-gray-900">{{ account.bank.name }} - {{ account.name }}</p>
-                <p class="text-sm text-gray-500">{{ account.balance }}</p>
+                <p class="text-sm font-medium text-gray-900 dark:text-white">{{ account.bank.name }} - {{ account.name }}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-300">{{ account.balance }}</p>
               </div>
             </li>
           </ul>
