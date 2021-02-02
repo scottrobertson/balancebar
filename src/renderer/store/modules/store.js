@@ -106,7 +106,7 @@ const actions = {
               name: credential.provider.display_name,
               logo: credential.provider.icon_url
             },
-            name: `Unable to fetch accounts for ${credential.provider.display_name}`,
+            name: `Unable to fetch accounts`,
             balance: 'We have not been able to fetch accounts for this bank at this time. Either try again, or reconnect.',
             hasError: true
           })
