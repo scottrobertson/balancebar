@@ -8,11 +8,15 @@
       </div>
 
       <div class="p-5 bg-white dark:bg-black dark:text-white">
-        <p class="">We need your TrueLayer Client ID/Secret. Follow these instructions:</p>
-        <ul class="mt-5">
-          <li>- Head over to <a class="underline" @click="openLink('https://console.truelayer.com/auth')">truelayer.com</a> and signup/login.</li>
-          <li>- Click app settings, and copy your client id, and client secret to the form below.</li>
-        </ul>
+        <p class="">We need your TrueLayer Client ID/Secret. Head over there, and create an application</p>
+
+        <p class="mt-5">
+          <a class="cursor-pointer underline" @click="openLink('https://console.truelayer.com')">https://console.truelayer.com</a>
+        </p>
+
+        <p class="mt-5">
+          And then enter the details below
+          </p>
 
         <form @submit="saveCredentials">
           <div class="mt-5">

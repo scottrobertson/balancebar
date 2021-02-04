@@ -26,6 +26,27 @@ function createWindow () {
 
   const contextMenu = Menu.buildFromTemplate([
     {
+      label: 'Refresh',
+      type: 'normal',
+      click: () => {
+        window.webContents.send('refresh')
+      }
+    },
+    {
+      label: 'Reset',
+      type: 'normal',
+      click: () => {
+        window.webContents.send('reset')
+      }
+    },
+    {
+      label: 'Load Examples',
+      type: 'normal',
+      click: () => {
+        window.webContents.send('load-examples')
+      }
+    },
+    {
       label: 'Quit',
       type: 'normal',
       click: () => {
@@ -78,6 +99,10 @@ function createWindow () {
 
   ipcMain.handle('dark-mode:system', () => {
     nativeTheme.themeSource = 'system'
+  })
+
+  ipcMain.on('oauth-start', (event, url) => {
+    console.log(`Opening oAuth: ${url}`)
   })
 
   window.on('blur', () => {

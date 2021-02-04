@@ -40,13 +40,13 @@
         </div>
       </div>
 
-      <div v-else class="p-5">
+      <div v-else class="p-5 dark:text-white">
         No credentials here. Add one!
       </div>
     </div>
 
     <div class="h-10 text-center text-gray-400">
-      <span class=" text-xs ">Updated: {{ lastRefreshed }} - </span> <a href="#" @click="refreshAccounts" class="text-center text-xs underline">Refresh</a> - <a href="#" @click="resetAll" class="text-center text-xs underline">Reset</a> - <a href="#" @click="loadExampleCredentials" class="text-center text-xs underline">Load Examples</a>
+      <span class=" text-xs ">Updated: {{ lastRefreshed }} - </span> <a href="#" @click="refreshAccounts" class="text-center text-xs underline">Refresh</a>
     </div>
   </div>
 
@@ -71,6 +71,18 @@
         setInterval(() => {
           this.updateLocalRefreshedAt(this.lastRefreshedAt)
         }, 30000)
+
+        this.$electron.ipcRenderer.on('refresh', () => {
+          this.refreshAccounts()
+        })
+
+        this.$electron.ipcRenderer.on('reset', () => {
+          this.resetAll()
+        })
+
+        this.$electron.ipcRenderer.on('load-examples', () => {
+          this.loadExampleCredentials()
+        })
       } else {
         this.$router.push('/truelayer')
       }
@@ -115,7 +127,8 @@
         this.$store.dispatch('loadExampleCredentials')
       },
       startTrueLayerAuth () {
-        this.$electron.shell.openExternal(`https://auth.truelayer.com/?response_type=code&client_id=${this.$store.getters.truelayerClientId}&scope=accounts%20balance%20cards%20offline_access&redirect_uri=${this.redirectUrl}&providers=uk-ob-all%20uk-oauth-all`)
+        const oAuthUrl = `https://auth.truelayer.com/?response_type=code&client_id=${this.$store.getters.truelayerClientId}&scope=accounts%20balance%20cards%20offline_access&redirect_uri=${this.redirectUrl}&providers=uk-ob-all%20uk-oauth-all`
+        this.$electron.ipcRenderer.sendSync('oauth-start', oAuthUrl)
       }
     }
 
