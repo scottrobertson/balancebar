@@ -69,7 +69,28 @@ const actions = {
   loadExampleCredentials ({commit, dispatch}) {
     commit('resetCredentials')
 
-    const examples = []
+    const examples = [{
+      accessToken: 'access token here',
+      credentials: {
+        credentials_id: 'credentials id here',
+        provider: {
+          display_name: 'Monzo',
+          icon_url: 'https://truelayer-provider-assets.s3.amazonaws.com/global/icons/monzo.svg',
+          provider_id: 'ob-monzo'
+        }
+      }
+    },
+    {
+      accessToken: 'invalid access token',
+      credentials: {
+        credentials_id: '123',
+        provider: {
+          display_name: 'Barclaycard',
+          icon_url: 'https://truelayer-provider-assets.s3.amazonaws.com/global/icons/barclaycard.svg',
+          provider_id: 'ob-barclaycard'
+        }
+      }
+    }]
 
     examples.forEach((credential) => {
       commit('addCredentials', credential)
