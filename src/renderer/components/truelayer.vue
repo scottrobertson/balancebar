@@ -39,7 +39,7 @@
     </div>
 
     <div class="mx-auto mt-5 text-xs text-gray-900 dark:text-gray-400 p-5">
-      These credentials will be encrypted in your system's keychain.
+      Your secret will be encrypted in your system's keychain.
     </div>
 
   </div>
