@@ -37,13 +37,7 @@ function createWindow () {
       type: 'normal',
       click: () => {
         window.webContents.send('reset')
-      }
-    },
-    {
-      label: 'Load Examples',
-      type: 'normal',
-      click: () => {
-        window.webContents.send('load-examples')
+        window.loadURL(winURL)
       }
     },
     {
@@ -84,14 +78,31 @@ function createWindow () {
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
       enableRemoteModule: true
-
-    }
+    },
+    backgroundColor: '#000000'
   })
 
   window.loadURL(winURL)
 
-  ipcMain.on('oauth-start', (event, url) => {
-    console.log(`Opening oAuth: ${url}`)
+  ipcMain.on('oauth-start', (event, clientId) => {
+    const oAuthUrl = `https://auth.truelayer.com/?response_type=code&client_id=${clientId}&scope=info%20accounts%20balance%20cards%20offline_access&redirect_uri=http://localhost/oauth&providers=uk-ob-all%20uk-oauth-all%20uk-cs-mock`
+
+    console.log(`loading oauth: ${oAuthUrl}`)
+    window.loadURL(oAuthUrl)
+  })
+
+  const {session: {webRequest}} = window.webContents
+
+  const filter = {
+    urls: [
+      'http://localhost/oauth*'
+    ]
+  }
+
+  webRequest.onBeforeRequest(filter, async ({url}) => {
+    console.log('handle-oauth')
+    await window.loadURL(winURL)
+    window.webContents.send('handle-oauth', url)
   })
 
   window.on('blur', () => {

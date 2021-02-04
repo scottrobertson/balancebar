@@ -1,31 +1,9 @@
+import { sortBy } from 'lodash'
+
 const {DataAPIClient} = require('truelayer-client')
 const keytar = require('keytar')
 
 const KEYCHAIN_NAMESPACE = 'balance-menubar'
-
-// Used for development testing. Edit as needed, don't commit the edits.
-const exampleCredentials = [{
-  accessToken: 'access token here',
-  credentials: {
-    credentials_id: 'credentials id here',
-    provider: {
-      display_name: 'Monzo',
-      icon_url: 'https://truelayer-provider-assets.s3.amazonaws.com/global/icons/monzo.svg',
-      provider_id: 'ob-monzo'
-    }
-  }
-},
-{
-  accessToken: 'invalid access token',
-  credentials: {
-    credentials_id: '123',
-    provider: {
-      display_name: 'Barclaycard',
-      icon_url: 'https://truelayer-provider-assets.s3.amazonaws.com/global/icons/barclaycard.svg',
-      provider_id: 'ob-barclaycard'
-    }
-  }
-}]
 
 const state = {
   accounts: undefined,
@@ -89,14 +67,8 @@ const actions = {
     commit('setTrueLayer', truelayer)
   },
 
-  // Used for testing
-  loadExampleCredentials ({commit, dispatch}) {
-    commit('resetCredentials')
-
-    exampleCredentials.forEach((credential) => {
-      commit('addCredentials', credential)
-    })
-
+  addCredential ({commit, dispatch}, credential) {
+    commit('addCredentials', credential)
     dispatch('refreshAccounts')
   },
 
@@ -139,16 +111,19 @@ const actions = {
 
             try {
               balance = await DataAPIClient.getBalance(accessToken, account.account_id)
+              balance = balance.results[0]
+
               balance = new Intl.NumberFormat('gb-EN', { style: 'currency', currency: balance.currency }).format(balance.available)
             } catch (e) {
               console.log(`Account balance fetch failure: ${account.account_id}`)
-              balance = 'Unable to get balance'
+              balance = `Unable to get balance: ${e.error}`
             }
 
             commit('addAccount', {
               bank: {
                 name: credential.provider.display_name,
-                logo: credential.provider.icon_url
+                icon: credential.provider.logo_uri.replace('/logo/', '/icon/'),
+                logo: credential.provider.logo_uri
               },
               name: account.display_name,
               balance: balance
@@ -166,7 +141,7 @@ const actions = {
 
 const getters = {
   allAccounts (state) {
-    return state.accounts
+    return sortBy(state.accounts, ['bank.name', 'name'])
   },
   allCredentials (state) {
     return state.credentials
@@ -179,6 +154,10 @@ const getters = {
   },
   truelayerClientId (state) {
     return state.truelayerClientId
+  },
+  async truelayerClientSecret () {
+    const secret = await keytar.getPassword(KEYCHAIN_NAMESPACE, 'truelayer-client-secret')
+    return secret
   }
 }
 
