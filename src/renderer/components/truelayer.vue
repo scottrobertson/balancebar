@@ -15,8 +15,12 @@
         </p>
 
         <p class="mt-5">
+          The redirect url should be: http://localhost
+        </p>
+
+        <p class="mt-5">
           And then enter the details below
-          </p>
+        </p>
 
         <form @submit="saveCredentials">
           <div class="mt-5">
