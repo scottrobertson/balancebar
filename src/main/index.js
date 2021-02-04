@@ -70,6 +70,8 @@ function createWindow () {
     }
   })
 
+  nativeTheme.themeSource = 'system'
+
   // Make the popup window for the menubar
   window = new BrowserWindow({
     // width: 2000,
@@ -87,19 +89,6 @@ function createWindow () {
   })
 
   window.loadURL(winURL)
-
-  ipcMain.handle('dark-mode:toggle', () => {
-    if (nativeTheme.shouldUseDarkColors) {
-      nativeTheme.themeSource = 'light'
-    } else {
-      nativeTheme.themeSource = 'dark'
-    }
-    return nativeTheme.shouldUseDarkColors
-  })
-
-  ipcMain.handle('dark-mode:system', () => {
-    nativeTheme.themeSource = 'system'
-  })
 
   ipcMain.on('oauth-start', (event, url) => {
     console.log(`Opening oAuth: ${url}`)

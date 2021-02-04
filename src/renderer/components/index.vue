@@ -45,7 +45,7 @@
       </div>
     </div>
 
-    <div class="h-10 text-center text-gray-400">
+    <div v-if="lastRefreshed" class="h-10 text-center text-gray-400">
       <span class=" text-xs ">Updated: {{ lastRefreshed }} - </span> <a href="#" @click="refreshAccounts" class="text-center text-xs underline">Refresh</a>
     </div>
   </div>
