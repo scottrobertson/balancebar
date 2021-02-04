@@ -46,7 +46,7 @@
     </div>
 
     <div class="h-10 text-center text-gray-400">
-      <span class=" text-xs ">Updated: {{ lastRefeshed }} - </span> <a href="#" @click="refreshAccounts" class="text-center text-xs underline">Refresh</a> - <a href="#" @click="resetAll" class="text-center text-xs underline">Reset</a> - <a href="#" @click="loadExampleCredentials" class="text-center text-xs underline">Load Examples</a>
+      <span class=" text-xs ">Updated: {{ lastRefreshed }} - </span> <a href="#" @click="refreshAccounts" class="text-center text-xs underline">Refresh</a> - <a href="#" @click="resetAll" class="text-center text-xs underline">Reset</a> - <a href="#" @click="loadExampleCredentials" class="text-center text-xs underline">Load Examples</a>
     </div>
   </div>
 
@@ -59,18 +59,18 @@
 
     data () {
       return {
-        lastRefeshed: undefined
+        lastRefreshed: undefined
       }
     },
 
     mounted () {
       if (this.hasTruelayerClient) {
         this.refreshAccounts()
-        this.lastRefeshed = this.$moment(this.lastRefeshedAt).fromNow()
+        this.lastRefreshed = this.$moment(this.lastRefreshedAt).fromNow()
 
         // Keep the "last updated at" reactive.
         setInterval(() => {
-          this.lastRefeshed = this.$moment(this.lastRefeshedAt).fromNow()
+          this.lastRefreshed = this.$moment(this.lastRefreshedAt).fromNow()
         }, 30000)
       } else {
         this.$router.push('/truelayer')
@@ -87,8 +87,8 @@
       accounts () {
         return this.$store.getters.allAccounts
       },
-      lastRefeshedAt () {
-        return this.$store.getters.lastRefeshedAt
+      lastRefreshedAt () {
+        return this.$store.getters.lastRefreshedAt
       },
       redirectUrl () {
         return 'https://example.com'

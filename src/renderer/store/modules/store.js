@@ -1,10 +1,10 @@
 const {DataAPIClient} = require('truelayer-client')
+const keytar = require('keytar')
 
 const state = {
   accounts: undefined,
-  lastRefeshedAt: undefined,
+  lastRefreshedAt: undefined,
   truelayerClientId: undefined,
-  truelayerClientSecret: undefined,
   credentials: undefined
 }
 
@@ -25,21 +25,30 @@ const mutations = {
     state.accounts.push(account)
   },
 
-  addCredentials (state, credentials) {
+  async addCredentials (state, credentials) {
     if (state.credentials === undefined) {
       state.credentials = []
     }
 
-    state.credentials.push(credentials)
+    state.credentials.push(credentials.credentials)
+
+    // Save the accessToken to Keychain
+    await keytar.setPassword('balance-menubar', `credentials_${credentials.credentials.credentials_id}`, credentials.accessToken)
   },
 
-  setLastRefeshedAt (state, timestamp) {
-    state.lastRefeshedAt = timestamp
+  setLastRefreshedAt (state, timestamp) {
+    state.lastRefreshedAt = timestamp
   },
 
-  setTrueLayerCredentials (state, clientId, clientSecret) {
-    state.truelayerClientId = clientId
-    state.truelayerClientSecret = clientSecret
+  async setTrueLayer (state, truelayer) {
+    state.truelayerClientId = truelayer.clientId
+
+    if (truelayer.clientSecret) {
+      await keytar.setPassword('balance-menubar', 'truelayer-client-secret', truelayer.clientSecret)
+    } else {
+      // This happens if we are resetting.
+      await keytar.deletePassword('balance-menubar', 'truelayer-client-secret')
+    }
   }
 }
 
@@ -47,38 +56,21 @@ const actions = {
   resetAll ({ commit }) {
     commit('resetCredentials')
     commit('resetAccounts')
-    commit('setTrueLayerCredentials', undefined, undefined)
+    commit('setTrueLayer', {})
   },
 
-  setTrueLayerCredentials ({ commit }, clientId, clientSecret) {
-    commit('setTrueLayerCredentials', clientId, clientSecret)
+  setTrueLayer ({ commit }, truelayer) {
+    commit('setTrueLayer', truelayer)
   },
 
   // Used for testing
   loadExampleCredentials ({commit, dispatch}) {
     commit('resetCredentials')
 
-    const examples = [{
-      access_token: '123',
-      credentials_id: '1',
-      provider: {
-        display_name: 'Monzo',
-        icon_url: 'https://truelayer-provider-assets.s3.amazonaws.com/global/icons/monzo.svg',
-        provider_id: 'ob-monzo'
-      }
-    },
-    {
-      access_token: 'Invalid',
-      credentials_id: '2',
-      provider: {
-        display_name: 'Barclaycard',
-        icon_url: 'https://truelayer-provider-assets.s3.amazonaws.com/global/icons/barclaycard.svg',
-        provider_id: 'ob-barclaycard'
-      }
-    }]
+    const examples = []
 
-    examples.forEach((credentials) => {
-      commit('addCredentials', credentials)
+    examples.forEach((credential) => {
+      commit('addCredentials', credential)
     })
 
     dispatch('refreshAccounts')
@@ -93,9 +85,12 @@ const actions = {
       credentials.forEach(async (credential) => {
         let accounts
 
+        console.log('gettingAccessToken', `credentials_${credential.credentials_id}`)
+        const accessToken = await keytar.getPassword('balance-menubar', `credentials_${credential.credentials_id}`)
+
         try {
           console.log(`Fetching accounts for ${credential.credentials_id}`)
-          accounts = await DataAPIClient.getAccounts(credential.access_token)
+          accounts = await DataAPIClient.getAccounts(accessToken)
         } catch (e) {
           console.log(`Unable to fetch accounts ${credential.credentials_id}`)
 
@@ -119,7 +114,7 @@ const actions = {
             let balance
 
             try {
-              balance = await DataAPIClient.getBalance(credential.access_token, account.account_id)
+              balance = await DataAPIClient.getBalance(accessToken, account.account_id)
               balance = new Intl.NumberFormat('gb-EN', { style: 'currency', currency: balance.currency }).format(balance.available)
             } catch (e) {
               console.log(`Account balance fetch failure: ${account.account_id}`)
@@ -140,7 +135,7 @@ const actions = {
         // TODO add support for cards, without just copying the code above. getCards/getCardBalance
       })
 
-      commit('setLastRefeshedAt', new Date())
+      commit('setLastRefreshedAt', new Date())
     }
   }
 }
@@ -152,8 +147,8 @@ const getters = {
   allCredentials (state) {
     return state.credentials
   },
-  lastRefeshedAt (state) {
-    return state.lastRefeshedAt
+  lastRefreshedAt (state) {
+    return state.lastRefreshedAt
   },
   hasTruelayerClient (state) {
     return state.truelayerClientId !== undefined

@@ -71,7 +71,10 @@ export default {
       this.$electron.shell.openExternal(link)
     },
     saveCredentials () {
-      this.$store.dispatch('setTrueLayerCredentials', this.clientId, this.clientSecret)
+      this.$store.dispatch('setTrueLayer', {
+        clientId: this.clientId,
+        clientSecret: this.clientSecret
+      })
       this.$router.push('/')
     }
   }
