@@ -150,7 +150,6 @@ export default {
 
         if (tokens && me) {
           this.$store.dispatch('addCredential', {
-            accessToken: tokens.access_token,
             refreshToken: tokens.refresh_token,
             credentials: me.results[0]
           })
