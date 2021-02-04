@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col h-screen justify-between dark:bg-black">
+  <div class="flex flex-col h-screen justify-between dark:bg-black pl-0.5 pr-0.5">
     <div class="h-10">
       <div class="bg-white px-4 py-3 border-b border-gray-200 dark:bg-black dark:border-gray-800 pb-5">
         <div class="-ml-4 -mt-2 flex items-center justify-between flex-wrap">
@@ -21,11 +21,11 @@
       <div v-if="credentials">
         <div v-if="accounts">
           <ul class="divide-y divide-gray-200 dark:divide-gray-800">
-            <li class="p-5 flex hover:bg-white dark:hover:bg-gray-900" :class="{ 'bg-red-100 hover:bg-red-200': account.hasError }" v-for="account in accounts" :key="account.id">
+            <li class="p-5 flex hover:bg-white dark:hover:bg-gray-900" :class="{ 'bg-red-100 dark:bg-red-600 hover:bg-red-200 dark:hover:bg-red-500': account.hasError }" v-for="account in accounts" :key="account.id">
               <img class="h-10 w-10 dark:bg-white" :src="account.bank.logo" alt="">
               <div class="ml-3">
                 <p class="text-sm font-medium text-gray-900 dark:text-white">{{ account.bank.name }} - {{ account.name }}</p>
-                <p class="text-sm text-gray-500 dark:text-gray-300">{{ account.balance }}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-300" :class="{ 'dark:text-white': account.hasError }">{{ account.balance }}</p>
               </div>
             </li>
           </ul>
