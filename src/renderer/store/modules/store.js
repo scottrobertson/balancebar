@@ -1,6 +1,8 @@
 const {DataAPIClient} = require('truelayer-client')
 const keytar = require('keytar')
 
+const KEYCHAIN_NAMESPACE = 'balance-menubar'
+
 const state = {
   accounts: undefined,
   lastRefreshedAt: undefined,
@@ -33,7 +35,7 @@ const mutations = {
     state.credentials.push(credentials.credentials)
 
     // Save the accessToken to Keychain
-    await keytar.setPassword('balance-menubar', `credentials_${credentials.credentials.credentials_id}`, credentials.accessToken)
+    await keytar.setPassword(KEYCHAIN_NAMESPACE, `credentials_${credentials.credentials.credentials_id}`, credentials.accessToken)
   },
 
   setLastRefreshedAt (state, timestamp) {
@@ -44,10 +46,10 @@ const mutations = {
     state.truelayerClientId = truelayer.clientId
 
     if (truelayer.clientSecret) {
-      await keytar.setPassword('balance-menubar', 'truelayer-client-secret', truelayer.clientSecret)
+      await keytar.setPassword(KEYCHAIN_NAMESPACE, 'truelayer-client-secret', truelayer.clientSecret)
     } else {
       // This happens if we are resetting.
-      await keytar.deletePassword('balance-menubar', 'truelayer-client-secret')
+      await keytar.deletePassword(KEYCHAIN_NAMESPACE, 'truelayer-client-secret')
     }
   }
 }
@@ -86,7 +88,7 @@ const actions = {
         let accounts
 
         console.log('gettingAccessToken', `credentials_${credential.credentials_id}`)
-        const accessToken = await keytar.getPassword('balance-menubar', `credentials_${credential.credentials_id}`)
+        const accessToken = await keytar.getPassword(KEYCHAIN_NAMESPACE, `credentials_${credential.credentials_id}`)
 
         try {
           console.log(`Fetching accounts for ${credential.credentials_id}`)
