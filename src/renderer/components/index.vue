@@ -67,10 +67,11 @@
       if (this.hasTruelayerClient) {
         this.refreshAccounts()
 
+        // Refresh accounts every hour
+        setInterval(() => { this.refreshAccounts() }, 60000 * 60)
+
         // Keep the "last updated at" reactive.
-        setInterval(() => {
-          this.updateLocalRefreshedAt(this.lastRefreshedAt)
-        }, 30000)
+        setInterval(() => { this.updateLocalRefreshedAt(this.lastRefreshedAt) }, 30000)
 
         this.$electron.ipcRenderer.on('refresh', () => {
           this.refreshAccounts()
