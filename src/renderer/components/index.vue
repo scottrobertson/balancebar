@@ -66,11 +66,10 @@
     mounted () {
       if (this.hasTruelayerClient) {
         this.refreshAccounts()
-        this.lastRefreshed = this.$moment(this.lastRefreshedAt).fromNow()
 
         // Keep the "last updated at" reactive.
         setInterval(() => {
-          this.lastRefreshed = this.$moment(this.lastRefreshedAt).fromNow()
+          this.updateLocalRefreshedAt(this.lastRefreshedAt)
         }, 30000)
       } else {
         this.$router.push('/truelayer')
@@ -95,7 +94,16 @@
       }
     },
 
+    watch: {
+      lastRefreshedAt (newValue, oldValue) {
+        this.updateLocalRefreshedAt(newValue)
+      }
+    },
+
     methods: {
+      updateLocalRefreshedAt (value) {
+        this.lastRefreshed = this.$moment(value).fromNow()
+      },
       refreshAccounts () {
         this.$store.dispatch('refreshAccounts')
       },
