@@ -78,8 +78,7 @@ function createWindow () {
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
       enableRemoteModule: true
-    },
-    backgroundColor: '#000000'
+    }
   })
 
   window.loadURL(winURL)

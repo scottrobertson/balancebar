@@ -25,7 +25,7 @@
       <div v-if="credentials">
         <div v-if="accounts">
           <ul class="divide-y divide-gray-200 dark:divide-gray-800">
-            <li class="p-5 flex bg-white hover:bg-white dark:hover:bg-gray-900" :class="{ 'bg-red-100 dark:bg-red-600 hover:bg-red-200 dark:hover:bg-red-500': account.hasError }" v-for="account in accounts" :key="account.id">
+            <li class="p-5 flex hover:bg-white dark:hover:bg-gray-900" :class="{ 'bg-red-100 dark:bg-red-600 hover:bg-red-200 dark:hover:bg-red-500': account.hasError }" v-for="account in accounts" :key="account.id">
               <img class="h-10 w-10" :src="account.bank.icon" alt="">
               <div class="ml-3">
                 <p class="text-sm font-medium text-gray-900 dark:text-white">{{ account.bank.name }} - {{ account.name }}</p>
