@@ -23,6 +23,7 @@ function createWindow () {
   // Setup the menubar with an icon
   let icon = nativeImage.createFromDataURL(base64Icon)
   tray = new Tray(icon)
+  tray.setIgnoreDoubleClickEvents(true)
 
   const contextMenu = Menu.buildFromTemplate([
     {
