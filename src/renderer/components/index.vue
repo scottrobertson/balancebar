@@ -30,7 +30,7 @@
               <div class="ml-3">
                 <p class="text-sm font-medium text-gray-900 dark:text-white">{{ account.bank.name }} - {{ account.name }}</p>
                 <p class="text-sm text-gray-500 dark:text-gray-300" :class="{ 'dark:text-white': account.hasError }">
-                  {{ account.balance }}{{ copiedBalanceAccount === account ? ' - copied to clipboard' : '' }}
+                  {{ account.balance }}{{ copiedBalanceAccount === account ? ' copied to clipboard' : '' }}
                 </p>
               </div>
             </li>

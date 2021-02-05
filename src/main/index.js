@@ -1,6 +1,7 @@
 'use strict'
 
-import { app, BrowserWindow, ipcMain, Tray, nativeImage, nativeTheme, Menu } from 'electron'
+import { app, BrowserWindow, ipcMain, Tray, nativeTheme, Menu } from 'electron'
+import path from 'path'
 
 let tray
 let window
@@ -12,7 +13,7 @@ app.dock.hide()
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
 if (process.env.NODE_ENV !== 'development') {
-  global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
+  global.__static = path.join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
 const winURL = process.env.NODE_ENV === 'development'
@@ -20,9 +21,11 @@ const winURL = process.env.NODE_ENV === 'development'
   : `file://${__dirname}/index.html`
 
 function createWindow () {
+  const logoUrl = path.join(__dirname, 'icon.png')
+  console.log('Logo', logoUrl)
   // Setup the menubar with an icon
-  let icon = nativeImage.createFromDataURL(base64Icon)
-  tray = new Tray(icon)
+  // let icon = nativeImage.createFrom(base64Icon)
+  tray = new Tray(logoUrl)
   tray.setIgnoreDoubleClickEvents(true)
 
   const contextMenu = Menu.buildFromTemplate([
@@ -154,23 +157,6 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-
-// Tray icon as Base64
-let base64Icon = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAA
-                  C1+jfqAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6A
-                  AAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QAAKqNIzIAAAAJcEhZcwAADd
-                  cAAA3XAUIom3gAAAAHdElNRQfhBx8MNR1ju65VAAABP0lEQVQoz3WRvyvEcR
-                  zGX5+vH4fp5OpbV6TbbFZJUlKyGQ10jPcHiAzfyT8gxcKZDEp2ZVUGblOSuA
-                  HfOsXgKPEycH4kz/Qs757neb/gU4567I0LLnjjsaP8lEMumzpowXPPLTho6r
-                  xZgAgcZ5cuqjxwyw473HJPlQInjn3cb7tk8M5LcyYm5rz0zuCS2xABPdSJkb
-                  5QAwg1+pCYOj0QWSJig5R8eAKg3xli8qRs0mIJ9x0GcMoAJlYse+YKgMPuN3
-                  PAoiO0Mccuz8BeSMxw5SPPDHAQfW19xS8faPr+QSNixTPLVkzAyKlGBJY8st
-                  Ngq73OuGcCYKvBrIeWorDKC0VirknDFhUA27kmZpa3sBoBVTpICZyaAzDHKY
-                  GUDqrQDGyyTjcXFKmTAepMUGaNSaYbRbPO/4G17NBvov/gfgf8+8SPMRMrfA
-                  AAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxNy0wNy0zMVQxMjo1MzoyOSswMjowML
-                  Lr6YgAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTctMDctMzFUMTI6NTM6MjkrMD
-                  I6MDDDtlE0AAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48Gg
-                  AAAABJRU5ErkJggg==`
 
 // app.on('activate', () => {
 //   if (window === null) {
