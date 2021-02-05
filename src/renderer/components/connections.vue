@@ -15,19 +15,36 @@
     <div class="">
       <div v-if="credentials">
         <ul class="divide-y divide-gray-200 dark:divide-gray-800">
-            <li class="p-5 flex hover:bg-white dark:hover:bg-gray-900" v-for="credential in credentials" :key="credential.credentials_id">
-              <img class="h-10 w-10" :src="credential.provider.logo_uri" alt="">
-              <div class="ml-3">
-                <p class="text-sm font-medium text-gray-900 dark:text-white">{{ credential.provider.display_name }}</p>
-                <p v-if="credential.consent_created_at" class="text-xs dark:text-white">Connected {{ credential.consent_created_at | moment('from') }}</p>
-                <a @click="disconnectCredential(credential)" class="underline cursor-pointer text-xs text-gray-500 dark:text-gray-300">
-                  Disconnect
-                </a>
-              </div>
-            </li>
-          </ul>
+          <li
+            v-for="credential in credentials"
+            :key="credential.credentials_id"
+            class="p-5 flex hover:bg-white dark:hover:bg-gray-900"
+          >
+            <img
+              class="h-10 w-10"
+              :src="credential.provider.logo_uri"
+              alt=""
+            >
+            <div class="ml-3">
+              <p class="text-sm font-medium text-gray-900 dark:text-white">
+                {{ credential.provider.display_name }}
+              </p>
+              <p
+                v-if="credential.consent_created_at"
+                class="text-xs dark:text-white"
+              >
+                Connected {{ credential.consent_created_at | moment('from') }}
+              </p>
+              <a
+                class="underline cursor-pointer text-xs text-gray-500 dark:text-gray-300"
+                @click="disconnectCredential(credential)"
+              >
+                Disconnect
+              </a>
+            </div>
+          </li>
+        </ul>
       </div>
-
     </div>
   </div>
 </template>
@@ -35,16 +52,16 @@
 <script>
 export default {
 
-  mounted () {
-    this.$electron.ipcRenderer.on('goto-home', (event) => {
-      this.$router.push('/')
-    })
-  },
-
   computed: {
     credentials () {
       return this.$store.getters.allCredentials
     }
+  },
+
+  mounted () {
+    this.$electron.ipcRenderer.on('goto-home', (event) => {
+      this.$router.push('/')
+    })
   },
 
   methods: {

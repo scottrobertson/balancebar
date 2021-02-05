@@ -8,10 +8,15 @@
       </div>
 
       <div class="p-5 bg-white dark:bg-black dark:text-white">
-        <p class="">We need your TrueLayer Client ID/Secret. Head over there, and create an application</p>
+        <p class="">
+          We need your TrueLayer Client ID/Secret. Head over there, and create an application
+        </p>
 
         <p class="mt-5">
-          <a class="cursor-pointer underline" @click="openLink('https://console.truelayer.com')">https://console.truelayer.com</a>
+          <a
+            class="cursor-pointer underline"
+            @click="openLink('https://console.truelayer.com')"
+          >https://console.truelayer.com</a>
         </p>
 
         <p class="mt-5">
@@ -24,21 +29,45 @@
 
         <form @submit="saveCredentials">
           <div class="mt-5">
-            <label for="client_id" class="block text-sm font-medium text-gray-700 dark:text-white">TrueLayer Client ID</label>
+            <label
+              for="client_id"
+              class="block text-sm font-medium text-gray-700 dark:text-white"
+            >TrueLayer Client ID</label>
             <div class="mt-1">
-              <input v-model="clientId" type="text" name="client_id" id="client_id" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md dark:text-black" placeholder="TrueLayer Client ID">
+              <input
+                id="client_id"
+                v-model="clientId"
+                type="text"
+                name="client_id"
+                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md dark:text-black"
+                placeholder="TrueLayer Client ID"
+              >
             </div>
           </div>
 
           <div class="mt-5">
-            <label for="client_secret" class="block text-sm font-medium text-gray-700 dark:text-white">TrueLayer Client Secret</label>
+            <label
+              for="client_secret"
+              class="block text-sm font-medium text-gray-700 dark:text-white"
+            >TrueLayer Client Secret</label>
             <div class="mt-1">
-              <input v-model="clientSecret" type="password" name="client_secret" id="client_secret" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md dark:text-black" placeholder="TrueLayer Client Secret">
+              <input
+                id="client_secret"
+                v-model="clientSecret"
+                type="password"
+                name="client_secret"
+                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md dark:text-black"
+                placeholder="TrueLayer Client Secret"
+              >
             </div>
           </div>
 
           <div class="mt-5">
-            <button @click="saveCredentials" type="button" class="w-full text-center py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <button
+              type="button"
+              class="w-full text-center py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              @click="saveCredentials"
+            >
               Save Credentials
             </button>
           </div>
@@ -49,7 +78,6 @@
     <div class="mx-auto mt-5 text-xs text-gray-900 dark:text-gray-400 p-5">
       Your secret will be encrypted in your system's keychain.
     </div>
-
   </div>
 </template>
 
@@ -62,15 +90,15 @@ export default {
     }
   },
 
-  mounted () {
-    if (this.hasTruelayerCredentials) {
-      this.$router.push('/')
-    }
-  },
-
   computed: {
     hasTruelayerCredentials () {
       return this.$store.getters.hasTruelayerCredentials
+    }
+  },
+
+  mounted () {
+    if (this.hasTruelayerCredentials) {
+      this.$router.push('/')
     }
   },
 

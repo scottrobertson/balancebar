@@ -15,10 +15,8 @@ app.dock.hide()
 if (process.env.NODE_ENV !== 'development') {
   global.__static = path.join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
-
-const winURL = process.env.NODE_ENV === 'development'
-  ? 'http://localhost:9080'
-  : `file://${__dirname}/index.html`
+// eslint-disable-next-line node/no-path-concat
+const winURL = process.env.NODE_ENV === 'development' ? 'http://localhost:9080' : `file://${__dirname}/index.html`
 
 function createWindow () {
   const logoUrl = path.join(__dirname, 'icon.png')
@@ -86,7 +84,9 @@ function createWindow () {
 
   // Make the popup window for the menubar
   window = new BrowserWindow({
+    width: 400,
     minWidth: 400,
+    height: 600,
     minHeight: 600,
     resizable: true,
     show: false,
