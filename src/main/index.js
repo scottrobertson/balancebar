@@ -86,10 +86,9 @@ function createWindow () {
 
   // Make the popup window for the menubar
   window = new BrowserWindow({
-    // width: 2000,
-    maxWidth: 400,
+    width: 400,
     resizable: true,
-    minHeight: 400,
+    minHeight: 600,
     show: false,
     frame: false,
     webPreferences: {
@@ -101,11 +100,18 @@ function createWindow () {
 
   window.loadURL(winURL)
 
-  ipcMain.on('oauth-start', (event, clientId) => {
+  ipcMain.on('oauth-start', async (event, clientId) => {
     const oAuthUrl = `https://auth.truelayer.com/?response_type=code&client_id=${clientId}&scope=info%20accounts%20balance%20cards%20offline_access&redirect_uri=http://localhost/oauth&providers=uk-ob-all%20uk-oauth-all%20uk-cs-mock`
 
     console.log(`loading oauth: ${oAuthUrl}`)
-    window.loadURL(oAuthUrl)
+
+    window.loadURL('')
+
+    // window.hide()
+    window.setSize(1000, 1000)
+    window.center()
+    await window.loadURL(oAuthUrl)
+    window.show()
   })
 
   const {session: {webRequest}} = window.webContents
@@ -118,7 +124,13 @@ function createWindow () {
 
   webRequest.onBeforeRequest(filter, async ({url}) => {
     console.log('handle-oauth')
+
+    window.hide()
+    window.setSize(400, 600)
+
     await window.loadURL(winURL)
+    showWindow()
+
     window.webContents.send('handle-oauth', url)
   })
 
@@ -126,6 +138,10 @@ function createWindow () {
     if (!window.webContents.isDevToolsOpened()) {
       window.hide()
     }
+  })
+
+  window.on('close', () => {
+    console.log(window)
   })
 
   window.on('closed', () => {
