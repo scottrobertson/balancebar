@@ -1,6 +1,6 @@
 import { sortBy } from 'lodash'
 
-const {DataAPIClient, AuthAPIClient} = require('truelayer-client')
+const { DataAPIClient, AuthAPIClient } = require('truelayer-client')
 const keytar = require('keytar')
 
 const KEYCHAIN_NAMESPACE = 'balance-menubar'
@@ -72,12 +72,12 @@ const actions = {
     commit('setTrueLayer', truelayer)
   },
 
-  addCredential ({commit, dispatch}, credential) {
+  addCredential ({ commit, dispatch }, credential) {
     commit('addCredentials', credential)
     dispatch('refreshAccounts')
   },
 
-  deleteCredential ({commit, dispatch}, credential) {
+  deleteCredential ({ commit, dispatch }, credential) {
     commit('deleteCredential', credential)
   },
 
@@ -86,7 +86,7 @@ const actions = {
     commit('setLastRefreshedAt', undefined)
 
     const credentials = state.credentials
-    let returnAccounts = []
+    const returnAccounts = []
 
     if (credentials && credentials.length) {
       for (let i = 0; i < credentials.length; i++) {
@@ -195,7 +195,7 @@ function noBalanceAccount (credential) {
       name: credential.provider.display_name,
       logo: credential.provider.icon_url
     },
-    name: `Unable to fetch accounts`,
+    name: 'Unable to fetch accounts',
     balance: 'We have not been able to fetch accounts for this bank at this time. Either try again, or reconnect.',
     hasError: true
   }

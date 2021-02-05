@@ -17,7 +17,7 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 const winURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080`
+  ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`
 
 function createWindow () {
@@ -112,7 +112,7 @@ function createWindow () {
     window.show()
   })
 
-  const {session: {webRequest}} = window.webContents
+  const { session: { webRequest } } = window.webContents
 
   const filter = {
     urls: [
@@ -120,7 +120,7 @@ function createWindow () {
     ]
   }
 
-  webRequest.onBeforeRequest(filter, async ({url}) => {
+  webRequest.onBeforeRequest(filter, async ({ url }) => {
     console.log('handle-oauth')
 
     window.hide()
