@@ -11,6 +11,11 @@ export default new Router({
       component: require('@/components/index').default
     },
     {
+      path: '/connections',
+      name: 'connections',
+      component: require('@/components/connections').default
+    },
+    {
       path: '/truelayer',
       name: 'truelayer',
       component: require('@/components/truelayer').default

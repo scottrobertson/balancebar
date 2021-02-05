@@ -30,6 +30,13 @@ function createWindow () {
 
   const contextMenu = Menu.buildFromTemplate([
     {
+      label: 'Home',
+      type: 'normal',
+      click: () => {
+        window.webContents.send('goto-home')
+      }
+    },
+    {
       label: 'Refresh',
       type: 'normal',
       click: () => {
@@ -37,7 +44,14 @@ function createWindow () {
       }
     },
     {
-      label: 'Reset',
+      label: 'Manage Connections',
+      type: 'normal',
+      click: () => {
+        window.webContents.send('goto-connections')
+      }
+    },
+    {
+      label: 'Full Reset',
       type: 'normal',
       click: () => {
         window.webContents.send('reset')

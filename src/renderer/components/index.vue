@@ -23,7 +23,7 @@
 
     <div class="">
       <div v-if="credentials">
-        <div v-if="accounts">
+        <div v-if="accounts && accounts.length > 0">
           <ul class="divide-y divide-gray-200 dark:divide-gray-800">
             <li @click="copyBalance(account)" class="p-5 flex hover:bg-white dark:hover:bg-gray-900 cursor-pointer" :class="{ 'bg-red-100 dark:bg-red-600 hover:bg-red-200 dark:hover:bg-red-500': account.hasError }" v-for="account in accounts" :key="account.id">
               <img class="h-10 w-10" :src="account.bank.icon" alt="">
@@ -37,12 +37,16 @@
           </ul>
         </div>
 
-        <div v-else class="p-5">
+        <div v-else-if="accounts && accounts.length == 0" class="p-5">
           No accounts found for the credentials given. This generally means access has been denied.
 
           <div class="mt-5">
             <div v-for="credential in credentials" :key="credential.credentials_id"> - {{ credential.provider.display_name }}</div>
           </div>
+        </div>
+
+        <div v-else-if="accounts === undefined" class="p-5">
+          Refreshing accounts, please wait...
         </div>
       </div>
 
@@ -70,7 +74,9 @@ export default {
 
     mounted () {
       if (this.hasTruelayerClient) {
-        this.refreshAccounts()
+        if (this.accounts === undefined) {
+          this.refreshAccounts()
+        }
 
         // Refresh accounts every hour
         setInterval(() => { this.refreshAccounts() }, 60000 * 60)
@@ -88,6 +94,10 @@ export default {
 
         this.$electron.ipcRenderer.on('handle-oauth', (event, url) => {
           this.addCredentialsFromUrl(url)
+        })
+
+        this.$electron.ipcRenderer.on('goto-connections', (event) => {
+          this.$router.push('/connections')
         })
       } else {
         this.$router.push('/truelayer')

@@ -21,12 +21,18 @@ const mutations = {
     state.credentials = undefined
   },
 
-  addAccount (state, account) {
-    if (state.accounts === undefined) {
-      state.accounts = []
-    }
+  setAccounts (state, accounts) {
+    console.log('accounts', accounts)
+    state.accounts = accounts
+  },
 
-    state.accounts.push(account)
+  deleteCredential (state, credential) {
+    if (state.credentials.length === 1) {
+      state.credentials = undefined
+    } else {
+      const index = state.credentials.findIndex(c => c.credentials_id === credential.credentials_id)
+      state.credentials.splice(index, 1)
+    }
   },
 
   async addCredentials (state, credentials) {
@@ -71,13 +77,21 @@ const actions = {
     dispatch('refreshAccounts')
   },
 
+  deleteCredential ({commit, dispatch}, credential) {
+    commit('deleteCredential', credential)
+  },
+
   async refreshAccounts ({ state, commit }) {
     commit('resetAccounts')
+    commit('setLastRefreshedAt', undefined)
 
     const credentials = state.credentials
+    let returnAccounts = []
 
     if (credentials && credentials.length) {
-      credentials.forEach(async (credential) => {
+      for (let i = 0; i < credentials.length; i++) {
+        const credential = credentials[i]
+
         let accounts
         let cards
         let accessToken
@@ -95,7 +109,7 @@ const actions = {
         } catch (e) {
           console.log(e.error)
 
-          commit('addAccount', {
+          returnAccounts.push({
             bank: {
               name: credential.provider.display_name,
               logo: credential.provider.icon_url
@@ -114,13 +128,14 @@ const actions = {
               accounts = await DataAPIClient.getAccounts(accessToken)
             } catch (e) {
               console.log(`Unable to fetch accounts ${credential.credentials_id}`)
-              commit('addAccount', noBalanceAccount(credential))
+              returnAccounts.push(noBalanceAccount(credential))
             }
 
             if (accounts) {
-              accounts.results.forEach(async (account) => {
-                commit('addAccount', await getBalance('account', credential, accessToken, account))
-              })
+              for (let a = 0; a < accounts.results.length; a++) {
+                const account = accounts.results[a]
+                returnAccounts.push(await getBalance('account', credential, accessToken, account))
+              }
             }
           }
 
@@ -131,18 +146,20 @@ const actions = {
               cards = await DataAPIClient.getCards(accessToken)
             } catch (e) {
               console.log(`Unable to fetch cards ${credential.credentials_id}`)
-              commit('addAccount', noBalanceAccount(credential))
+              returnAccounts.push(noBalanceAccount(credential))
             }
 
             if (cards) {
-              cards.results.forEach(async (card) => {
-                commit('addAccount', await getBalance('card', credential, accessToken, card))
-              })
+              for (let c = 0; c < cards.results.length; c++) {
+                const card = cards.results[c]
+                returnAccounts.push(await getBalance('card', credential, accessToken, card))
+              }
             }
           }
         }
-      })
+      }
 
+      commit('setAccounts', returnAccounts)
       commit('setLastRefreshedAt', new Date())
     }
   }
@@ -150,7 +167,9 @@ const actions = {
 
 const getters = {
   allAccounts (state) {
-    return sortBy(state.accounts, ['bank.name', 'name'])
+    if (state.accounts) {
+      return sortBy(state.accounts, ['bank.name', 'name'])
+    }
   },
   allCredentials (state) {
     return state.credentials
