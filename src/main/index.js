@@ -137,7 +137,7 @@ function showWindow () {
     y = Math.round(trayPos.y + trayPos.height * 10)
   }
 
-  window.setPosition(x, y + 20, false)
+  window.setPosition(x, y + 5, false)
   window.setVisibleOnAllWorkspaces(true)
   window.show()
   window.focus()
