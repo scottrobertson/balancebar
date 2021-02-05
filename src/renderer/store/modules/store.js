@@ -79,6 +79,7 @@ const actions = {
     if (credentials && credentials.length) {
       credentials.forEach(async (credential) => {
         let accounts
+        let cards
         let accessToken
 
         const client = new AuthAPIClient({
@@ -106,55 +107,40 @@ const actions = {
         }
 
         if (accessToken) {
-          try {
-            console.log(`Fetching accounts for ${credential.credentials_id}`)
-            accounts = await DataAPIClient.getAccounts(accessToken)
-          } catch (e) {
-            console.log(`Unable to fetch accounts ${credential.credentials_id}`)
+          // Bank Accounts
+          if (credential.scopes.includes('accounts')) {
+            try {
+              console.log(`Fetching accounts for ${credential.credentials_id}`)
+              accounts = await DataAPIClient.getAccounts(accessToken)
+            } catch (e) {
+              console.log(`Unable to fetch accounts ${credential.credentials_id}`)
+              commit('addAccount', noBalanceAccount(credential))
+            }
 
-            // TODO: find a nicer way to surface this in the UI.
-            // For now, add a "fake" account to surface it.
-            commit('addAccount', {
-              bank: {
-                name: credential.provider.display_name,
-                logo: credential.provider.icon_url
-              },
-              name: `Unable to fetch accounts`,
-              balance: 'We have not been able to fetch accounts for this bank at this time. Either try again, or reconnect.',
-              hasError: true
-            })
+            if (accounts) {
+              accounts.results.forEach(async (account) => {
+                commit('addAccount', await getBalance('account', credential, accessToken, account))
+              })
+            }
           }
 
-          if (accounts) {
-            accounts.results.forEach(async (account) => {
-              console.log(`Fetching balance for ${account.account_id}`)
+          // Credit Cards
+          if (credential.scopes.includes('cards')) {
+            try {
+              console.log(`Fetching cards for ${credential.credentials_id}`)
+              cards = await DataAPIClient.getCards(accessToken)
+            } catch (e) {
+              console.log(`Unable to fetch cards ${credential.credentials_id}`)
+              commit('addAccount', noBalanceAccount(credential))
+            }
 
-              let balance
-
-              try {
-                balance = await DataAPIClient.getBalance(accessToken, account.account_id)
-                balance = balance.results[0]
-
-                balance = new Intl.NumberFormat('gb-EN', { style: 'currency', currency: balance.currency }).format(balance.available)
-              } catch (e) {
-                console.log(`Account balance fetch failure: ${account.account_id}`)
-                balance = `Unable to get balance: ${e.error}`
-              }
-
-              commit('addAccount', {
-                bank: {
-                  name: credential.provider.display_name,
-                  icon: credential.provider.logo_uri.replace('/logo/', '/icon/'),
-                  logo: credential.provider.logo_uri
-                },
-                name: account.display_name,
-                balance: balance
+            if (cards) {
+              cards.results.forEach(async (card) => {
+                commit('addAccount', await getBalance('card', credential, accessToken, card))
               })
-            })
+            }
           }
         }
-
-        // TODO add support for cards, without just copying the code above. getCards/getCardBalance
       })
 
       commit('setLastRefreshedAt', new Date())
@@ -181,6 +167,49 @@ const getters = {
   async truelayerClientSecret () {
     const secret = await keytar.getPassword(KEYCHAIN_NAMESPACE, 'truelayer-client-secret')
     return secret
+  }
+}
+
+function noBalanceAccount (credential) {
+  return {
+    bank: {
+      name: credential.provider.display_name,
+      logo: credential.provider.icon_url
+    },
+    name: `Unable to fetch accounts`,
+    balance: 'We have not been able to fetch accounts for this bank at this time. Either try again, or reconnect.',
+    hasError: true
+  }
+}
+
+async function getBalance (type, credential, accessToken, object) {
+  console.log(`Fetching balance for ${object.account_id}`)
+
+  let balance
+
+  try {
+    if (type === 'account') {
+      balance = await DataAPIClient.getBalance(accessToken, object.account_id)
+    } else if (type === 'card') {
+      balance = await DataAPIClient.getCardBalance(accessToken, object.account_id)
+    }
+
+    balance = balance.results[0]
+
+    balance = new Intl.NumberFormat('gb-EN', { style: 'currency', currency: balance.currency }).format(balance.available)
+  } catch (e) {
+    console.log(`Account balance fetch failure: ${object.account_id}`)
+    balance = `Unable to get balance: ${e.error}`
+  }
+
+  return {
+    bank: {
+      name: credential.provider.display_name,
+      icon: credential.provider.logo_uri.replace('/logo/', '/icon/'),
+      logo: credential.provider.logo_uri
+    },
+    name: object.display_name,
+    balance: balance
   }
 }
 
