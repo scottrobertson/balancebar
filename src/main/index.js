@@ -86,9 +86,9 @@ function createWindow () {
 
   // Make the popup window for the menubar
   window = new BrowserWindow({
-    width: 400,
-    resizable: true,
+    minWidth: 400,
     minHeight: 600,
+    resizable: true,
     show: false,
     frame: false,
     webPreferences: {
@@ -104,12 +104,10 @@ function createWindow () {
     const oAuthUrl = `https://auth.truelayer.com/?response_type=code&client_id=${clientId}&scope=info%20accounts%20balance%20cards%20offline_access&redirect_uri=http://localhost/oauth&providers=uk-ob-all%20uk-oauth-all%20uk-cs-mock`
 
     console.log(`loading oauth: ${oAuthUrl}`)
-
-    window.loadURL('')
-
-    // window.hide()
+    window.hide()
     window.setSize(1000, 1000)
-    window.center()
+    window.setAlwaysOnTop(true)
+
     await window.loadURL(oAuthUrl)
     window.show()
   })
@@ -127,6 +125,7 @@ function createWindow () {
 
     window.hide()
     window.setSize(400, 600)
+    window.setAlwaysOnTop(false)
 
     await window.loadURL(winURL)
     showWindow()
