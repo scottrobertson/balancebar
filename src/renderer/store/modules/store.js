@@ -196,7 +196,9 @@ async function getBalance (type, credential, accessToken, object) {
 
     balance = balance.results[0]
 
-    balance = new Intl.NumberFormat('gb-EN', { style: 'currency', currency: balance.currency }).format(balance.available)
+    const useBalance = type === 'card' ? balance.current : balance.available
+
+    balance = new Intl.NumberFormat('gb-EN', { style: 'currency', currency: balance.currency }).format(useBalance)
   } catch (e) {
     console.log(`Account balance fetch failure: ${object.account_id}`)
     balance = `Unable to get balance: ${e.error}`
