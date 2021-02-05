@@ -15,7 +15,7 @@
         </p>
 
         <p class="mt-5">
-          The redirect url should be: http://localhost
+          The redirect url should be: http://localhost/oauth
         </p>
 
         <p class="mt-5">
