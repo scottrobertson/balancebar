@@ -30,7 +30,7 @@
               <div class="ml-3">
                 <p class="text-sm font-medium text-gray-900 dark:text-white">{{ account.bank.name }} - {{ account.name }}</p>
                 <p class="text-sm text-gray-500 dark:text-gray-300" :class="{ 'dark:text-white': account.hasError }">
-                  {{ account.balance }}{{ copiedBalanceAccount === account ? ' copied to clipboard' : '' }}
+                  {{ account.balance }}<transition name="fade"><span class="text-gray-400" v-show="copiedBalanceAccount === account"> copied</span></transition>
                 </p>
               </div>
             </li>
@@ -125,7 +125,7 @@ export default {
 
           setTimeout(() => {
             this.copiedBalanceAccount = undefined
-          }, 2000)
+          }, 3000)
         })
       },
       async addCredentialsFromUrl (url) {
@@ -184,3 +184,12 @@ export default {
 
   }
 </script>
+
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+</style>
