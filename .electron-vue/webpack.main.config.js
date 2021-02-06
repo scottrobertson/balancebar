@@ -6,6 +6,7 @@ const path = require('path')
 const { dependencies } = require('../package.json')
 const webpack = require('webpack')
 
+const ESLintPlugin = require('eslint-webpack-plugin');
 const MinifyPlugin = require("babel-minify-webpack-plugin")
 
 let mainConfig = {
@@ -17,17 +18,6 @@ let mainConfig = {
   ],
   module: {
     rules: [
-      {
-        test: /\.(js)$/,
-        enforce: 'pre',
-        exclude: /node_modules/,
-        use: {
-          loader: 'eslint-loader',
-          options: {
-            formatter: require('eslint-friendly-formatter')
-          }
-        }
-      },
       {
         test: /\.js$/,
         use: 'babel-loader',
@@ -49,6 +39,7 @@ let mainConfig = {
     path: path.join(__dirname, '../dist/electron')
   },
   plugins: [
+    new ESLintPlugin(),
     new webpack.NoEmitOnErrorsPlugin()
   ],
   resolve: {
