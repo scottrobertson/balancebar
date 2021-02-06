@@ -1,12 +1,36 @@
-# Balance Menubar App
+# Balance
 
 Show your bank balances in your Menu Bar using TrueLayer.
 
-Very WIP.
+<div align="center">
+  <img
+    max-width="400"
+    width="45%"
+    src="images/balance-menubar-light.png"
+    alt="Balance Menu Bar in light mode"
+  >
+  <img
+    max-width="400"
+    width="45%"
+    src="images/balance-menubar-dark.png"
+    alt="Balance Menu Bar in dark mode"
+  >
+</div>
 
-#### Build Setup
+- Uses Open Banking (via TrueLayer)
+- All data is stored and processed locally, no third party servers involved (other than TrueLayer, obviously)
+- Secrets stored in Keychain
+- Supports all TrueLayer supported banks
+- Dark mode
+- Refresh balances on demand, or every hour automatically
 
-``` bash
+## Usage
+
+> Docs coming soon.
+
+## Development
+
+```bash
 # install dependencies
 yarn install
 
