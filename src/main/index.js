@@ -20,9 +20,6 @@ const winURL = process.env.NODE_ENV === 'development' ? 'http://localhost:9080' 
 
 function createWindow () {
   const logoUrl = path.join(__dirname, 'icon.png')
-  console.log('Logo', logoUrl)
-  // Setup the menubar with an icon
-  // let icon = nativeImage.createFrom(base64Icon)
   tray = new Tray(logoUrl)
   tray.setIgnoreDoubleClickEvents(true)
 
