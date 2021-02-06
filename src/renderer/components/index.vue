@@ -8,11 +8,15 @@
               Balances
             </h3>
 
-            <div
-              v-if="lastRefreshed"
-              class="text-gray-400"
-            >
-              <span class=" text-xs ">Last updated {{ lastRefreshed }}</span>
+            <div v-if="lastRefreshed && accounts">
+              <span class="text-gray-400 text-xs">Last updated {{ lastRefreshed }} - <a
+                class="underline cursor-pointer"
+                @click="refreshAccounts"
+              >Refresh</a></span>
+            </div>
+
+            <div v-else>
+              <span class="text-gray-400 text-xs">Updating...</span>
             </div>
           </div>
           <div class="ml-4 mt-2 flex-shrink-0 pt-2">
@@ -82,9 +86,12 @@
 
         <div
           v-else-if="accounts === undefined"
-          class="p-5 dark:text-white"
+          class="p-5 dark:text-gray-400 text-center"
         >
-          Refreshing accounts, please wait...
+          <div class="spinner">
+            <div class="double-bounce1" />
+            <div class="double-bounce2" />
+          </div>
         </div>
       </div>
 
@@ -145,6 +152,7 @@ export default {
       setInterval(() => { this.refreshAccounts() }, 60000 * 60)
 
       // Keep the "last updated at" reactive.
+      this.updateLocalRefreshedAt(this.lastRefreshedAt)
       setInterval(() => { this.updateLocalRefreshedAt(this.lastRefreshedAt) }, 5000)
 
       this.$electron.ipcRenderer.on('refresh', () => {
@@ -239,5 +247,47 @@ export default {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+
+  position: relative;
+  margin: 100px auto;
+}
+
+.double-bounce1, .double-bounce2 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #333;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+  animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+.double-bounce2 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes sk-bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bounce {
+  0%, 100% {
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 50% {
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
 }
 </style>
