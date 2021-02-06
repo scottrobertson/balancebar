@@ -68,6 +68,10 @@ const actions = {
     commit('setTrueLayer', {})
   },
 
+  resetAccounts ({ commit }) {
+    commit('resetAccounts')
+  },
+
   setTrueLayer ({ commit }, truelayer) {
     commit('setTrueLayer', truelayer)
   },

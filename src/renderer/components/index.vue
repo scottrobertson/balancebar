@@ -82,7 +82,7 @@
 
         <div
           v-else-if="accounts === undefined"
-          class="p-5"
+          class="p-5 dark:text-white"
         >
           Refreshing accounts, please wait...
         </div>
@@ -178,6 +178,8 @@ export default {
       })
     },
     async addCredentialsFromUrl (url) {
+      this.$store.dispatch('resetAccounts')
+
       const fullUrl = new URL(url)
       const urlParams = new URLSearchParams(fullUrl.search)
 
@@ -199,15 +201,12 @@ export default {
       }
 
       try {
-        console.log('getting me')
+        console.log('getting /me')
         me = await DataAPIClient.getMe(tokens.access_token)
       } catch (e) {
-        console.log('me failure')
+        console.log('/me failure')
         console.log(e.error)
       }
-
-      console.log('tokens', tokens)
-      console.log('me', me)
 
       if (tokens && me) {
         this.$store.dispatch('addCredential', {
