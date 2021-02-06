@@ -22,7 +22,9 @@ Show your bank balances in your Menu Bar using TrueLayer.
 - Secrets stored in Keychain
 - Supports all TrueLayer supported banks
 - Dark mode
-- Refresh balances on demand, or every hour automatically
+- Refresh balances on-demand, or every hour automatically
+- Multiple accounts per bank
+- Click account to copy balance
 
 ## Usage
 

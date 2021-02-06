@@ -6,10 +6,10 @@
 
 <script>
 export default {
-  name: 'BalanceMenubar'
-}
+  name: "BalanceMenubar",
+};
 </script>
 
 <style>
-  /* CSS */
+/* CSS */
 </style>
