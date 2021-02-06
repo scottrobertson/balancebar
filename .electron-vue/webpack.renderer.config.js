@@ -91,7 +91,6 @@ let rendererConfig = {
           loader: 'url-loader',
           query: {
             limit: 10000,
-            name: 'imgs/[name]--[folder].[ext]'
           }
         }
       },
@@ -100,7 +99,6 @@ let rendererConfig = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: 'media/[name]--[folder].[ext]'
         }
       },
       {
@@ -109,7 +107,6 @@ let rendererConfig = {
           loader: 'url-loader',
           query: {
             limit: 10000,
-            name: 'fonts/[name]--[folder].[ext]'
           }
         }
       }
