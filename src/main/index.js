@@ -99,13 +99,12 @@ function createWindow() {
   ipcMain.on("oauth-start", async (event, clientId) => {
     const oAuthUrl = `https://auth.truelayer.com/?response_type=code&client_id=${clientId}&scope=info%20accounts%20balance%20cards%20offline_access&redirect_uri=http://localhost/oauth&providers=uk-ob-all%20uk-oauth-all%20uk-cs-mock`;
 
-    console.log(`loading oauth: ${oAuthUrl}`);
-    window.hide();
-    window.setSize(1000, 1000);
-    window.setAlwaysOnTop(true);
+    window.loadURL(oAuthUrl);
 
-    await window.loadURL(oAuthUrl);
-    window.show();
+    const currentBounds = window.getBounds();
+    window.setSize(800, currentBounds.height);
+
+    showWindow(true);
   });
 
   const {
@@ -119,13 +118,11 @@ function createWindow() {
   webRequest.onBeforeRequest(filter, async ({ url }) => {
     console.log("handle-oauth");
 
-    window.hide();
-    window.setSize(400, 600);
-    window.setAlwaysOnTop(false);
-
-    await window.loadURL(winURL);
+    const currentBounds = window.getBounds();
+    window.setSize(400, currentBounds.height, true);
     showWindow();
 
+    await window.loadURL(winURL);
     window.webContents.send("handle-oauth", url);
   });
 
@@ -152,7 +149,7 @@ function toggleWindow() {
   }
 }
 
-function showWindow() {
+function showWindow(oAuth = false) {
   const trayPos = tray.getBounds();
   const windowPos = window.getBounds();
   let x = 0;
@@ -165,7 +162,12 @@ function showWindow() {
     y = Math.round(trayPos.y + trayPos.height * 10);
   }
 
-  window.setPosition(x, y + 5, false);
+  if (oAuth) {
+    x -= 45;
+  }
+
+  window.setPosition(x, y + 5, true);
+
   window.setVisibleOnAllWorkspaces(true);
   window.show();
   window.focus();

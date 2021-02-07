@@ -104,6 +104,7 @@ export default {
         this.$store.dispatch("addCredential", credentials);
       } else {
         // TODO show error
+        this.refreshAccounts();
       }
     },
     refreshAccounts() {
