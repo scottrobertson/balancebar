@@ -8,17 +8,17 @@ export default new Router({
     {
       path: "/",
       name: "index",
-      component: require("@/components/index").default,
+      component: require("@/pages/index").default,
     },
     {
       path: "/connections",
       name: "connections",
-      component: require("@/components/connections").default,
+      component: require("@/pages/connections").default,
     },
     {
       path: "/truelayer",
       name: "truelayer",
-      component: require("@/components/truelayer").default,
+      component: require("@/pages/truelayer").default,
     },
     {
       path: "*",

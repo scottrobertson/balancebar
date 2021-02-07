@@ -31,24 +31,7 @@
       <div v-if="credentials">
         <div v-if="accounts && accounts.length > 0">
           <ul class="divide-y divide-gray-200 dark:divide-gray-800">
-            <li
-              v-for="account in accounts"
-              :key="account.id"
-              class="p-5 flex hover:bg-white dark:hover:bg-gray-900 cursor-pointer"
-              :class="{ 'bg-red-100 dark:bg-red-600 hover:bg-red-200 dark:hover:bg-red-500': account.error }"
-              @click="copyBalance(account)"
-            >
-              <img class="h-10 w-10" :src="account.bank.icon" alt="" />
-              <div class="ml-3">
-                <p class="text-sm font-medium text-gray-900 dark:text-white">{{ account.bank.name }} - {{ account.name }}</p>
-                <p class="text-sm text-gray-500 dark:text-gray-300" :class="{ 'dark:text-white': account.error }">
-                  {{ account.error ? account.error : account.balance }}
-                  <transition name="fade">
-                    <span v-show="copiedBalanceAccount === account" class="text-gray-400"> copied</span>
-                  </transition>
-                </p>
-              </div>
-            </li>
+            <Account v-for="account in accounts" :key="account.id" :account="account" />
           </ul>
         </div>
 
@@ -74,16 +57,20 @@
 </template>
 
 <script>
-const { AuthAPIClient, DataAPIClient } = require("truelayer-client");
 import { credentialsFromUrl } from "../services/truelayer-oauth";
+
+import Account from "../components/account";
 
 export default {
   name: "LandingPage",
 
+  components: {
+    Account,
+  },
+
   data() {
     return {
       lastRefreshed: undefined,
-      copiedBalanceAccount: undefined,
     };
   },
 
@@ -99,9 +86,6 @@ export default {
     },
     lastRefreshedAt() {
       return this.$store.getters.lastRefreshedAt;
-    },
-    redirectUrl() {
-      return "http://localhost";
     },
   },
 
@@ -149,15 +133,6 @@ export default {
   },
 
   methods: {
-    copyBalance(account) {
-      this.$copyText(account.balance).then((e) => {
-        this.copiedBalanceAccount = account;
-
-        setTimeout(() => {
-          this.copiedBalanceAccount = undefined;
-        }, 3000);
-      });
-    },
     async addCredentialsFromUrl(url) {
       this.$store.dispatch("resetAccounts");
 
