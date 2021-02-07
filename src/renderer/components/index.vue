@@ -35,15 +35,15 @@
               v-for="account in accounts"
               :key="account.id"
               class="p-5 flex hover:bg-white dark:hover:bg-gray-900 cursor-pointer"
-              :class="{ 'bg-red-100 dark:bg-red-600 hover:bg-red-200 dark:hover:bg-red-500': account.hasError }"
+              :class="{ 'bg-red-100 dark:bg-red-600 hover:bg-red-200 dark:hover:bg-red-500': account.error }"
               @click="copyBalance(account)"
             >
               <img class="h-10 w-10" :src="account.bank.icon" alt="" />
               <div class="ml-3">
                 <p class="text-sm font-medium text-gray-900 dark:text-white">{{ account.bank.name }} - {{ account.name }}</p>
-                <p class="text-sm text-gray-500 dark:text-gray-300" :class="{ 'dark:text-white': account.hasError }">
-                  {{ account.balance
-                  }}<transition name="fade">
+                <p class="text-sm text-gray-500 dark:text-gray-300" :class="{ 'dark:text-white': account.error }">
+                  {{ account.error ? account.error : account.balance }}
+                  <transition name="fade">
                     <span v-show="copiedBalanceAccount === account" class="text-gray-400"> copied</span>
                   </transition>
                 </p>

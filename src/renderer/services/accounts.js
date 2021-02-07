@@ -1,19 +1,22 @@
 import { DataAPIClient, AuthAPIClient } from "truelayer-client";
 import { getTruelayerSecret, getRefreshToken } from "./secure-storage.js";
 
-export function noBalanceAccountObject(credential) {
-  return {
-    bank: {
-      name: credential.provider.display_name,
-      logo: credential.provider.icon_url,
-    },
-    name: "Unable to fetch accounts",
-    balance: "We have not been able to fetch accounts for this bank at this time. Either try again, or reconnect.",
-    hasError: true,
-  };
+export async function refreshAllAccounts(truelayerClientId, credentials) {
+  let allAccounts = [];
+
+  if (credentials && credentials.length) {
+    await Promise.all(
+      credentials.map(async (credential) => {
+        const accounts = await getAccountsForCredential(truelayerClientId, credential);
+        allAccounts.push(...accounts);
+      })
+    );
+  }
+
+  return allAccounts;
 }
 
-export async function getAccountObject(type, credential, accessToken, object) {
+async function getAccountObject(type, credential, accessToken, object) {
   console.log(`Fetching balance for ${object.account_id}`);
 
   let balance;
@@ -46,21 +49,20 @@ export async function getAccountObject(type, credential, accessToken, object) {
   };
 }
 
-export async function refreshAllAccounts(truelayerClientId, credentials) {
-  let allAccounts = [];
-
-  if (credentials && credentials.length) {
-    for (let i = 0; i < credentials.length; i++) {
-      const credential = credentials[i];
-      const accounts = await getAccountsForCredential(truelayerClientId, credential);
-      allAccounts.push(...accounts);
-    }
-  }
-
-  return allAccounts;
+function noBalanceAccountObject(credential) {
+  return {
+    bank: {
+      name: credential.provider.display_name,
+      logo: credential.provider.icon_url,
+    },
+    name: "Unable to fetch accounts",
+    error: "We have not been able to fetch accounts for this bank at this time. Either try again, or reconnect.",
+  };
 }
 
 async function getAccountsForCredential(truelayerClientId, credential) {
+  console.log(`Fetching accounts/cards for credential: ${credential.credentials_id}`);
+
   let accessToken;
   const accounts = [];
 
@@ -83,8 +85,7 @@ async function getAccountsForCredential(truelayerClientId, credential) {
         logo: credential.provider.icon_url,
       },
       name: "Cannot access account",
-      balance: "We have been unable to refresh the access tokens, please disconnect and try again..",
-      hasError: true,
+      error: "We have been unable to refresh the access tokens, please disconnect and try again..",
     });
   }
 
