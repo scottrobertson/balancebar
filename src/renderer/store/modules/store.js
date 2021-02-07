@@ -1,5 +1,5 @@
 import { sortBy } from "lodash";
-import { storeRefreshToken, deleteTruelayerSecret, storeTruelayerSecret, getTruelayerSecret } from "../../services/secure-storage.js";
+import { storeRefreshToken, deleteTruelayerSecret, storeTruelayerSecret } from "../../services/secure-storage.js";
 import { refreshAllAccounts } from "../../services/accounts.js";
 
 const state = {
@@ -105,9 +105,6 @@ const getters = {
   },
   truelayerClientId(state) {
     return state.truelayerClientId;
-  },
-  async truelayerClientSecret() {
-    return await getTruelayerSecret();
   },
 };
 
