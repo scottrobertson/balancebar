@@ -17,7 +17,7 @@ export async function refreshAllAccounts(truelayerClientId, credentials) {
 }
 
 async function getAccountObject(type, credential, accessToken, object) {
-  console.log(`Fetching balance for ${object.account_id}`);
+  console.log(`[${credential.credentials_id}] Fetching balance for ${object.account_id}`);
 
   let balance;
 
@@ -29,12 +29,10 @@ async function getAccountObject(type, credential, accessToken, object) {
     }
 
     balance = balance.results[0];
-
     const useBalance = type === "card" ? balance.current : balance.available;
-
     balance = new Intl.NumberFormat("gb-EN", { style: "currency", currency: balance.currency }).format(useBalance);
   } catch (e) {
-    console.log(`Account balance fetch failure: ${object.account_id}`);
+    console.log(`[${credential.credentials_id}] Account balance fetch failure: ${object.account_id}`);
     balance = `Unable to get balance: ${e.error}`;
   }
 
@@ -49,19 +47,19 @@ async function getAccountObject(type, credential, accessToken, object) {
   };
 }
 
-function noBalanceAccountObject(credential) {
+function noBalanceAccountObject(credential, error = "We have not been able to fetch accounts for this bank at this time. Either try again, or reconnect.") {
   return {
     bank: {
       name: credential.provider.display_name,
       logo: credential.provider.icon_url,
     },
     name: "Unable to fetch accounts",
-    error: "We have not been able to fetch accounts for this bank at this time. Either try again, or reconnect.",
+    error: error,
   };
 }
 
 async function getAccountsForCredential(truelayerClientId, credential) {
-  console.log(`Fetching accounts/cards for credential: ${credential.credentials_id}`);
+  console.log(`[${credential.credentials_id}] Processing`);
 
   let accessToken;
   const accounts = [];
@@ -73,25 +71,23 @@ async function getAccountsForCredential(truelayerClientId, credential) {
 
   const refreshToken = await getRefreshToken(credential);
 
-  try {
-    const refreshedToken = await client.refreshAccessToken(refreshToken);
-    accessToken = refreshedToken.access_token;
-  } catch (e) {
-    console.log(e.error);
+  if (refreshToken) {
+    try {
+      const refreshedToken = await client.refreshAccessToken(refreshToken);
+      accessToken = refreshedToken.access_token;
+    } catch (e) {
+      console.log(`[${credential.credentials_id}] Unable to get access token: `, e.error);
+      accounts.push(noBalanceAccountObject(credential, "We have been unable to refresh the access tokens, please disconnect and try again."));
+    }
 
-    accounts.push({
-      bank: {
-        name: credential.provider.display_name,
-        logo: credential.provider.icon_url,
-      },
-      name: "Cannot access account",
-      error: "We have been unable to refresh the access tokens, please disconnect and try again..",
-    });
-  }
-
-  if (accessToken) {
-    const accountsAndCards = await getAccountsAndCards(accessToken, credential);
-    accounts.push(...accountsAndCards);
+    if (accessToken) {
+      console.log(`[${credential.credentials_id}] Fetching cards and accounts`);
+      const accountsAndCards = await getAccountsAndCards(accessToken, credential);
+      accounts.push(...accountsAndCards);
+    }
+  } else {
+    console.log(`[${credential.credentials_id}] No refresh token found`);
+    accounts.push(noBalanceAccountObject(credential, "No refresh token found, please reconnect."));
   }
 
   return accounts;
@@ -99,7 +95,6 @@ async function getAccountsForCredential(truelayerClientId, credential) {
 
 async function getAccountsAndCards(accessToken, credential) {
   let [accounts, cards] = await Promise.all([getAccounts(accessToken, credential), getCards(accessToken, credential)]);
-
   return [...accounts, ...cards];
 }
 
@@ -109,10 +104,10 @@ async function getCards(accessToken, credential) {
 
   if (credential.scopes.includes("cards")) {
     try {
-      console.log(`Fetching cards for ${credential.credentials_id}`);
+      console.log(`[${credential.credentials_id}] Fetching cards`);
       cards = await DataAPIClient.getCards(accessToken);
     } catch (e) {
-      console.log(`Unable to fetch cards ${credential.credentials_id}`);
+      console.log(`[${credential.credentials_id}] Unable to fetch cards`);
       returnCards.push(noBalanceAccountObject(credential));
     }
 
@@ -124,6 +119,8 @@ async function getCards(accessToken, credential) {
         })
       );
     }
+  } else {
+    console.log(`[${credential.credentials_id}] Skipping cards`);
   }
 
   return returnCards;
@@ -135,10 +132,10 @@ async function getAccounts(accessToken, credential) {
 
   if (credential.scopes.includes("accounts")) {
     try {
-      console.log(`Fetching accounts for ${credential.credentials_id}`);
+      console.log(`[${credential.credentials_id}] Fetching accounts`);
       accounts = await DataAPIClient.getAccounts(accessToken);
     } catch (e) {
-      console.log(`Unable to fetch accounts ${credential.credentials_id}`);
+      console.log(`[${credential.credentials_id}] Unable to fetch accounts`);
       returnAccounts.push(noBalanceAccountObject(credential));
     }
 
@@ -150,6 +147,8 @@ async function getAccounts(accessToken, credential) {
         })
       );
     }
+  } else {
+    console.log(`[${credential.credentials_id}] Skipping accounts`);
   }
 
   return returnAccounts;

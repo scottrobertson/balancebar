@@ -1,6 +1,6 @@
 import { getTruelayerSecret } from "./secure-storage";
 
-const { AuthAPIClient, DataAPIClient } = require("truelayer-client");
+import { AuthAPIClient, DataAPIClient } from "truelayer-client";
 
 export async function credentialsFromUrl(truelayerClientId, url) {
   const fullUrl = new URL(url);
