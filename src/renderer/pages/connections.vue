@@ -13,27 +13,23 @@
     <div class="">
       <div v-if="credentials">
         <ul class="divide-y divide-gray-200 dark:divide-gray-800">
-          <li v-for="credential in credentials" :key="credential.credentials_id" class="p-5 flex hover:bg-white dark:hover:bg-gray-900">
-            <img class="h-10 w-10" :src="credential.provider.logo_uri" alt="" />
-            <div class="ml-3">
-              <p class="text-sm font-medium text-gray-900 dark:text-white">
-                {{ credential.provider.display_name }}
-              </p>
-              <div v-if="credential.consent_created_at" class="text-xs dark:text-white">
-                <div>Connected {{ credential.consent_created_at | moment("from") }}</div>
-                <div>Expires {{ credential.consent_expires_at | moment("from") }}</div>
-              </div>
-              <a class="underline cursor-pointer text-xs text-gray-500 dark:text-gray-300" @click="disconnectCredential(credential)"> Disconnect </a>
-            </div>
-          </li>
+          <Credential v-for="credential in credentials" :key="credential.credentials_id" :credential="credential" />
         </ul>
       </div>
+
+      <div v-else class="p-5">You have no active connections.</div>
     </div>
   </div>
 </template>
 
 <script>
+import Credential from "../components/credential";
+
 export default {
+  components: {
+    Credential,
+  },
+
   computed: {
     credentials() {
       return this.$store.getters.allCredentials;
@@ -44,12 +40,6 @@ export default {
     this.$electron.ipcRenderer.on("goto-home", (event) => {
       this.$router.push("/");
     });
-  },
-
-  methods: {
-    async disconnectCredential(credential) {
-      await this.$store.dispatch("deleteCredential", credential);
-    },
   },
 };
 </script>
