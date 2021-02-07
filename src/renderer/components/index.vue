@@ -75,6 +75,7 @@
 
 <script>
 const { AuthAPIClient, DataAPIClient } = require("truelayer-client");
+import { credentialsFromUrl } from "../services/truelayer-oauth";
 
 export default {
   name: "LandingPage",
@@ -160,39 +161,10 @@ export default {
     async addCredentialsFromUrl(url) {
       this.$store.dispatch("resetAccounts");
 
-      const fullUrl = new URL(url);
-      const urlParams = new URLSearchParams(fullUrl.search);
+      const credentials = await credentialsFromUrl(this.$store.getters.truelayerClientId, url);
 
-      const client = new AuthAPIClient({
-        client_id: this.$store.getters.truelayerClientId,
-        client_secret: await this.$store.getters.truelayerClientSecret,
-      });
-
-      let tokens;
-      let me;
-
-      try {
-        console.log("exchanging tokens");
-        tokens = await client.exchangeCodeForToken("http://localhost/oauth", urlParams.get("code"));
-        console.log("tokens", tokens);
-      } catch (e) {
-        console.log("tokens failure");
-        console.log(e.error);
-      }
-
-      try {
-        console.log("getting /me");
-        me = await DataAPIClient.getMe(tokens.access_token);
-      } catch (e) {
-        console.log("/me failure");
-        console.log(e.error);
-      }
-
-      if (tokens && me) {
-        this.$store.dispatch("addCredential", {
-          refreshToken: tokens.refresh_token,
-          credentials: me.results[0],
-        });
+      if (credentials) {
+        this.$store.dispatch("addCredential", credentials);
       }
     },
     updateLocalRefreshedAt(value) {

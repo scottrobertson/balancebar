@@ -31,14 +31,13 @@ const mutations = {
     }
   },
 
-  async addCredentials(state, credentials) {
+  async addCredentials(state, oauth) {
     if (state.credentials === undefined) {
       state.credentials = [];
     }
 
-    state.credentials.push(credentials.credentials);
-
-    await storeRefreshToken(credentials);
+    state.credentials.push(oauth.credentials);
+    await storeRefreshToken(oauth.credentials, oauth.refreshToken);
   },
 
   setLastRefreshedAt(state, timestamp) {
@@ -108,8 +107,7 @@ const getters = {
     return state.truelayerClientId;
   },
   async truelayerClientSecret() {
-    const secret = await getTruelayerSecret();
-    return secret;
+    return await getTruelayerSecret();
   },
 };
 

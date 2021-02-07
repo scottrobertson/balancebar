@@ -1,8 +1,8 @@
 const keytar = require("keytar");
 const KEYCHAIN_NAMESPACE = "balance-menubar";
 
-export async function storeRefreshToken(credentials) {
-  return await keytar.setPassword(KEYCHAIN_NAMESPACE, `credentials_${credentials.credentials_id}_refresh_token`, credentials.refreshToken);
+export async function storeRefreshToken(credentials, refreshToken) {
+  return await keytar.setPassword(KEYCHAIN_NAMESPACE, `credentials_${credentials.credentials_id}_refresh_token`, refreshToken);
 }
 
 export async function getRefreshToken(credentials) {
