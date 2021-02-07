@@ -56,12 +56,30 @@ export default {
   },
 
   watch: {
-    lastRefreshedAt(newValue, oldValue) {
+    lastRefreshedAt(newValue, _oldValue) {
       this.updateLocalRefreshedAt(newValue);
     },
   },
 
   mounted() {
+    // Electron messages from menubar app
+    this.$electron.ipcRenderer.on("refresh", () => {
+      this.refreshAccounts();
+    });
+
+    this.$electron.ipcRenderer.on("reset", () => {
+      this.resetAll();
+    });
+
+    this.$electron.ipcRenderer.on("handle-oauth", (event, url) => {
+      this.addCredentialsFromUrl(url);
+    });
+
+    this.$electron.ipcRenderer.on("goto-connections", (event) => {
+      this.$router.push("/connections");
+    });
+
+    // Redirect if we don't have TrueLayer connected
     if (this.hasTruelayerClient) {
       if (this.accounts === undefined) {
         this.refreshAccounts();
@@ -71,22 +89,6 @@ export default {
       setInterval(() => {
         this.refreshAccounts();
       }, 60000 * 60);
-
-      this.$electron.ipcRenderer.on("refresh", () => {
-        this.refreshAccounts();
-      });
-
-      this.$electron.ipcRenderer.on("reset", () => {
-        this.resetAll();
-      });
-
-      this.$electron.ipcRenderer.on("handle-oauth", (event, url) => {
-        this.addCredentialsFromUrl(url);
-      });
-
-      this.$electron.ipcRenderer.on("goto-connections", (event) => {
-        this.$router.push("/connections");
-      });
     } else {
       this.$router.push("/truelayer");
     }
@@ -100,6 +102,8 @@ export default {
 
       if (credentials) {
         this.$store.dispatch("addCredential", credentials);
+      } else {
+        // TODO show error
       }
     },
     refreshAccounts() {
