@@ -1,9 +1,8 @@
 import { sortBy } from "lodash";
+import { noBalanceAccount, getBalance } from "../../services/balance.js";
+import { storeRefreshToken, deleteTruelayerSecret, storeTruelayerSecret, getTruelayerSecret, getRefreshToken } from "../../services/storage.js";
 
 const { DataAPIClient, AuthAPIClient } = require("truelayer-client");
-const keytar = require("keytar");
-
-const KEYCHAIN_NAMESPACE = "balance-menubar";
 
 const state = {
   accounts: undefined,
@@ -22,7 +21,6 @@ const mutations = {
   },
 
   setAccounts(state, accounts) {
-    console.log("accounts", accounts);
     state.accounts = accounts;
   },
 
@@ -42,7 +40,7 @@ const mutations = {
 
     state.credentials.push(credentials.credentials);
 
-    await keytar.setPassword(KEYCHAIN_NAMESPACE, `credentials_${credentials.credentials.credentials_id}_refresh_token`, credentials.refreshToken);
+    await storeRefreshToken(credentials);
   },
 
   setLastRefreshedAt(state, timestamp) {
@@ -53,10 +51,9 @@ const mutations = {
     state.truelayerClientId = truelayer.clientId;
 
     if (truelayer.clientSecret) {
-      await keytar.setPassword(KEYCHAIN_NAMESPACE, "truelayer-client-secret", truelayer.clientSecret);
+      await storeTruelayerSecret(truelayer.clientSecret);
     } else {
-      // This happens if we are resetting.
-      await keytar.deletePassword(KEYCHAIN_NAMESPACE, "truelayer-client-secret");
+      await deleteTruelayerSecret();
     }
   },
 };
@@ -102,10 +99,10 @@ const actions = {
 
         const client = new AuthAPIClient({
           client_id: state.truelayerClientId,
-          client_secret: await keytar.getPassword(KEYCHAIN_NAMESPACE, "truelayer-client-secret"),
+          client_secret: await getTruelayerSecret(),
         });
 
-        const refreshToken = await keytar.getPassword(KEYCHAIN_NAMESPACE, `credentials_${credential.credentials_id}_refresh_token`);
+        const refreshToken = await getRefreshToken(credential);
 
         try {
           const refreshedToken = await client.refreshAccessToken(refreshToken);
@@ -188,55 +185,10 @@ const getters = {
     return state.truelayerClientId;
   },
   async truelayerClientSecret() {
-    const secret = await keytar.getPassword(KEYCHAIN_NAMESPACE, "truelayer-client-secret");
+    const secret = await getTruelayerSecret();
     return secret;
   },
 };
-
-function noBalanceAccount(credential) {
-  return {
-    bank: {
-      name: credential.provider.display_name,
-      logo: credential.provider.icon_url,
-    },
-    name: "Unable to fetch accounts",
-    balance: "We have not been able to fetch accounts for this bank at this time. Either try again, or reconnect.",
-    hasError: true,
-  };
-}
-
-async function getBalance(type, credential, accessToken, object) {
-  console.log(`Fetching balance for ${object.account_id}`);
-
-  let balance;
-
-  try {
-    if (type === "account") {
-      balance = await DataAPIClient.getBalance(accessToken, object.account_id);
-    } else if (type === "card") {
-      balance = await DataAPIClient.getCardBalance(accessToken, object.account_id);
-    }
-
-    balance = balance.results[0];
-
-    const useBalance = type === "card" ? balance.current : balance.available;
-
-    balance = new Intl.NumberFormat("gb-EN", { style: "currency", currency: balance.currency }).format(useBalance);
-  } catch (e) {
-    console.log(`Account balance fetch failure: ${object.account_id}`);
-    balance = `Unable to get balance: ${e.error}`;
-  }
-
-  return {
-    bank: {
-      name: credential.provider.display_name,
-      icon: credential.provider.logo_uri.replace("/logo/", "/icon/"),
-      logo: credential.provider.logo_uri,
-    },
-    name: object.display_name,
-    balance: balance,
-  };
-}
 
 export default {
   state,
