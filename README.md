@@ -28,12 +28,14 @@ Show your bank balances in your Menu Bar using TrueLayer.
 
 ## Usage
 
-> Docs coming soon.
+Docs coming soon. Follow #development below and run `yarn dev` for now.
 
 ## Development
 
 ```bash
-# install dependencies
+# Clone this repo
+
+# Install dependencies
 yarn install
 
 # Start the app
