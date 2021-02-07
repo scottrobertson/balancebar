@@ -1,6 +1,6 @@
 import { sortBy } from "lodash";
 import { storeRefreshToken, deleteTruelayerSecret, storeTruelayerSecret, getTruelayerSecret } from "../../services/secure-storage.js";
-import { getAccounts } from "../../services/accounts.js";
+import { refreshAllAccounts } from "../../services/accounts.js";
 
 const state = {
   accounts: undefined,
@@ -83,7 +83,7 @@ const actions = {
     commit("resetAccounts");
     commit("setLastRefreshedAt", undefined);
 
-    commit("setAccounts", await getAccounts(state.truelayerClientId, state.credentials));
+    commit("setAccounts", await refreshAllAccounts(state.truelayerClientId, state.credentials));
     commit("setLastRefreshedAt", new Date());
   },
 };

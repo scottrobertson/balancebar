@@ -46,78 +46,108 @@ export async function getAccountObject(type, credential, accessToken, object) {
   };
 }
 
-export async function getAccounts(truelayerClientId, credentials) {
-  let returnAccounts = [];
+export async function refreshAllAccounts(truelayerClientId, credentials) {
+  let allAccounts = [];
 
   if (credentials && credentials.length) {
     for (let i = 0; i < credentials.length; i++) {
       const credential = credentials[i];
+      const accounts = await getAccountsForCredential(truelayerClientId, credential);
+      allAccounts.push(...accounts);
+    }
+  }
 
-      let accounts;
-      let cards;
-      let accessToken;
+  return allAccounts;
+}
 
-      const client = new AuthAPIClient({
-        client_id: truelayerClientId,
-        client_secret: await getTruelayerSecret(),
-      });
+async function getAccountsForCredential(truelayerClientId, credential) {
+  let accessToken;
+  const accounts = [];
 
-      const refreshToken = await getRefreshToken(credential);
+  const client = new AuthAPIClient({
+    client_id: truelayerClientId,
+    client_secret: await getTruelayerSecret(),
+  });
 
-      try {
-        const refreshedToken = await client.refreshAccessToken(refreshToken);
-        accessToken = refreshedToken.access_token;
-      } catch (e) {
-        console.log(e.error);
+  const refreshToken = await getRefreshToken(credential);
 
-        returnAccounts.push({
-          bank: {
-            name: credential.provider.display_name,
-            logo: credential.provider.icon_url,
-          },
-          name: "Cannot access account",
-          balance: "We have been unable to refresh the access tokens, please disconnect and try again..",
-          hasError: true,
-        });
-      }
+  try {
+    const refreshedToken = await client.refreshAccessToken(refreshToken);
+    accessToken = refreshedToken.access_token;
+  } catch (e) {
+    console.log(e.error);
 
-      if (accessToken) {
-        // Bank Accounts
-        if (credential.scopes.includes("accounts")) {
-          try {
-            console.log(`Fetching accounts for ${credential.credentials_id}`);
-            accounts = await DataAPIClient.getAccounts(accessToken);
-          } catch (e) {
-            console.log(`Unable to fetch accounts ${credential.credentials_id}`);
-            returnAccounts.push(noBalanceAccountObject(credential));
-          }
+    accounts.push({
+      bank: {
+        name: credential.provider.display_name,
+        logo: credential.provider.icon_url,
+      },
+      name: "Cannot access account",
+      balance: "We have been unable to refresh the access tokens, please disconnect and try again..",
+      hasError: true,
+    });
+  }
 
-          if (accounts) {
-            for (let a = 0; a < accounts.results.length; a++) {
-              const account = accounts.results[a];
-              returnAccounts.push(await getAccountObject("account", credential, accessToken, account));
-            }
-          }
-        }
+  if (accessToken) {
+    const accountsAndCards = await getAccountsAndCards(accessToken, credential);
+    accounts.push(...accountsAndCards);
+  }
 
-        // Credit Cards
-        if (credential.scopes.includes("cards")) {
-          try {
-            console.log(`Fetching cards for ${credential.credentials_id}`);
-            cards = await DataAPIClient.getCards(accessToken);
-          } catch (e) {
-            console.log(`Unable to fetch cards ${credential.credentials_id}`);
-            returnAccounts.push(noBalanceAccountObject(credential));
-          }
+  return accounts;
+}
 
-          if (cards) {
-            for (let c = 0; c < cards.results.length; c++) {
-              const card = cards.results[c];
-              returnAccounts.push(await getAccountObject("card", credential, accessToken, card));
-            }
-          }
-        }
-      }
+async function getAccountsAndCards(accessToken, credential) {
+  let [accounts, cards] = await Promise.all([getAccounts(accessToken, credential), getCards(accessToken, credential)]);
+
+  return [...accounts, ...cards];
+}
+
+async function getCards(accessToken, credential) {
+  const returnCards = [];
+  let cards;
+
+  if (credential.scopes.includes("cards")) {
+    try {
+      console.log(`Fetching cards for ${credential.credentials_id}`);
+      cards = await DataAPIClient.getCards(accessToken);
+    } catch (e) {
+      console.log(`Unable to fetch cards ${credential.credentials_id}`);
+      returnCards.push(noBalanceAccountObject(credential));
+    }
+
+    if (cards) {
+      await Promise.all(
+        cards.results.map(async (card) => {
+          const cardObject = await getAccountObject("card", credential, accessToken, card);
+          returnCards.push(cardObject);
+        })
+      );
+    }
+  }
+
+  return returnCards;
+}
+
+async function getAccounts(accessToken, credential) {
+  const returnAccounts = [];
+  let accounts;
+
+  if (credential.scopes.includes("accounts")) {
+    try {
+      console.log(`Fetching accounts for ${credential.credentials_id}`);
+      accounts = await DataAPIClient.getAccounts(accessToken);
+    } catch (e) {
+      console.log(`Unable to fetch accounts ${credential.credentials_id}`);
+      returnAccounts.push(noBalanceAccountObject(credential));
+    }
+
+    if (accounts) {
+      await Promise.all(
+        accounts.results.map(async (account) => {
+          const accountObject = await getAccountObject("account", credential, accessToken, account);
+          returnAccounts.push(accountObject);
+        })
+      );
     }
   }
 
