@@ -26,6 +26,7 @@ export default {
   methods: {
     async disconnectCredential() {
       await this.$store.dispatch("deleteCredential", this.credential);
+      await this.$store.dispatch("refreshAccounts");
     },
   },
 };
