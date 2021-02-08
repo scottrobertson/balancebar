@@ -1,5 +1,5 @@
 import { sortBy } from "lodash";
-import { storeRefreshToken, deleteTruelayerSecret, storeTruelayerSecret } from "../../services/secure-storage.js";
+import { storeRefreshToken, deleteTruelayerSecret, storeTruelayerSecret, deleteRefreshToken } from "../../services/secure-storage.js";
 import { refreshAllAccounts } from "../../services/accounts.js";
 
 const state = {
@@ -14,7 +14,13 @@ const mutations = {
     state.accounts = undefined;
   },
 
-  resetCredentials(state) {
+  async resetCredentials(state) {
+    await Promise.all(
+      state.credentials.map(async (credential) => {
+        await deleteRefreshToken(credential);
+      })
+    );
+
     state.credentials = undefined;
   },
 
@@ -22,13 +28,15 @@ const mutations = {
     state.accounts = accounts;
   },
 
-  deleteCredential(state, credential) {
+  async deleteCredential(state, credential) {
     if (state.credentials.length === 1) {
       state.credentials = undefined;
     } else {
       const index = state.credentials.findIndex((c) => c.credentials_id === credential.credentials_id);
       state.credentials.splice(index, 1);
     }
+
+    await deleteRefreshToken(credential);
   },
 
   async addCredentials(state, oauth) {

@@ -9,6 +9,10 @@ export async function getRefreshToken(credentials) {
   return await keytar.getPassword(KEYCHAIN_NAMESPACE, `credentials_${credentials.credentials_id}_refresh_token`);
 }
 
+export async function deleteRefreshToken(credentials) {
+  return await keytar.deletePassword(KEYCHAIN_NAMESPACE, `credentials_${credentials.credentials_id}_refresh_token`);
+}
+
 export async function storeTruelayerSecret(secret) {
   return await keytar.setPassword(KEYCHAIN_NAMESPACE, "truelayer-client-secret", secret);
 }
