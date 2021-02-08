@@ -1,5 +1,8 @@
+import { access } from "original-fs";
 import { DataAPIClient, AuthAPIClient } from "truelayer-client";
-import { getTruelayerSecret, getRefreshToken } from "./secure-storage.js";
+import { getTruelayerSecret, getRefreshToken, storeRefreshToken } from "./secure-storage.js";
+
+import { getAccountBalance } from "./truelayer.js";
 
 export async function refreshAllAccounts(truelayerClientId, credentials) {
   let allAccounts = [];
@@ -23,7 +26,8 @@ async function getAccountObject(type, credential, accessToken, object) {
 
   try {
     if (type === "account") {
-      balance = await DataAPIClient.getBalance(accessToken, object.account_id);
+      balance = await getAccountBalance(object.account_id, accessToken);
+      console.log(balance);
     } else if (type === "card") {
       balance = await DataAPIClient.getCardBalance(accessToken, object.account_id);
     }
@@ -37,22 +41,23 @@ async function getAccountObject(type, credential, accessToken, object) {
   }
 
   return {
-    bank: {
-      name: credential.provider.display_name,
-      icon: credential.provider.logo_uri.replace("/logo/", "/icon/"),
-      logo: credential.provider.logo_uri,
-    },
+    bank: bankObject(credential),
     name: object.display_name,
     balance: balance,
   };
 }
 
+function bankObject(credential) {
+  return {
+    name: credential.provider.display_name,
+    icon: credential.provider.logo_uri.replace("/logo/", "/icon/"),
+    logo: credential.provider.logo_uri,
+  };
+}
+
 function noBalanceAccountObject(credential, error = "We have not been able to fetch accounts for this bank at this time. Either try again, or reconnect.") {
   return {
-    bank: {
-      name: credential.provider.display_name,
-      logo: credential.provider.icon_url,
-    },
+    bank: bankObject(credential),
     name: "Unable to fetch accounts",
     error: error,
   };
@@ -73,7 +78,14 @@ async function getAccountsForCredential(truelayerClientId, credential) {
 
   if (refreshToken) {
     try {
+      console.log(`[${credential.credentials_id}] Fetching access token`);
       const refreshedToken = await client.refreshAccessToken(refreshToken);
+
+      if (refreshedToken.refresh_token !== refreshToken) {
+        console.log(`[${credential.credentials_id}] Updating stored refresh token`);
+        await storeRefreshToken(credential, refreshedToken.refresh_token);
+      }
+
       accessToken = refreshedToken.access_token;
     } catch (e) {
       console.log(`[${credential.credentials_id}] Unable to get access token: `, e.error);
