@@ -1,7 +1,7 @@
-import { AuthAPIClient } from "truelayer-client";
-import { getTruelayerSecret, getRefreshToken, storeRefreshToken } from "./secure-storage.js";
+import { getRefreshToken, storeRefreshToken } from "./secure-storage.js";
 
 import { fetchAccountBalance, fetchCardBalance, fetchCards, fetchAccounts } from "./truelayer.js";
+import { refreshAccessToken } from "./truelayer-oauth.js";
 
 export async function refreshAllAccounts(truelayerClientId, credentials) {
   let allAccounts = [];
@@ -67,17 +67,12 @@ async function getAccountsForCredential(truelayerClientId, credential) {
   let accessToken;
   const accounts = [];
 
-  const client = new AuthAPIClient({
-    client_id: truelayerClientId,
-    client_secret: await getTruelayerSecret(),
-  });
-
   const refreshToken = await getRefreshToken(credential);
 
   if (refreshToken) {
     try {
       console.log(`[${credential.credentials_id}] Fetching access token`);
-      const refreshedToken = await client.refreshAccessToken(refreshToken);
+      const refreshedToken = await refreshAccessToken(truelayerClientId, refreshToken);
 
       if (refreshedToken.refresh_token !== refreshToken) {
         console.log(`[${credential.credentials_id}] Updating stored refresh token`);
