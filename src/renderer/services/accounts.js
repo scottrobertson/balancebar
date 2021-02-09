@@ -1,8 +1,7 @@
-import { access } from "original-fs";
-import { DataAPIClient, AuthAPIClient } from "truelayer-client";
+import { AuthAPIClient } from "truelayer-client";
 import { getTruelayerSecret, getRefreshToken, storeRefreshToken } from "./secure-storage.js";
 
-import { getAccountBalance } from "./truelayer.js";
+import { fetchAccountBalance, fetchCardBalance, fetchCards, fetchAccounts } from "./truelayer.js";
 
 export async function refreshAllAccounts(truelayerClientId, credentials) {
   let allAccounts = [];
@@ -26,10 +25,9 @@ async function getAccountObject(type, credential, accessToken, object) {
 
   try {
     if (type === "account") {
-      balance = await getAccountBalance(object.account_id, accessToken);
-      console.log(balance);
+      balance = await fetchAccountBalance(object.account_id, accessToken);
     } else if (type === "card") {
-      balance = await DataAPIClient.getCardBalance(accessToken, object.account_id);
+      balance = await fetchCardBalance(object.account_id, accessToken);
     }
 
     balance = balance.results[0];
@@ -117,9 +115,9 @@ async function getCards(accessToken, credential) {
   if (credential.scopes.includes("cards")) {
     try {
       console.log(`[${credential.credentials_id}] Fetching cards`);
-      cards = await DataAPIClient.getCards(accessToken);
+      cards = await fetchCards(accessToken);
     } catch (e) {
-      console.log(`[${credential.credentials_id}] Unable to fetch cards`);
+      console.log(`[${credential.credentials_id}] Unable to fetch cards`, e.error);
       returnCards.push(noBalanceAccountObject(credential));
     }
 
@@ -145,7 +143,7 @@ async function getAccounts(accessToken, credential) {
   if (credential.scopes.includes("accounts")) {
     try {
       console.log(`[${credential.credentials_id}] Fetching accounts`);
-      accounts = await DataAPIClient.getAccounts(accessToken);
+      accounts = await fetchAccounts(accessToken);
     } catch (e) {
       console.log(`[${credential.credentials_id}] Unable to fetch accounts`);
       returnAccounts.push(noBalanceAccountObject(credential));

@@ -1,6 +1,8 @@
 import { getTruelayerSecret } from "./secure-storage";
 
-import { AuthAPIClient, DataAPIClient } from "truelayer-client";
+import { AuthAPIClient } from "truelayer-client";
+
+import { fetchMe } from "./truelayer.js";
 
 export async function credentialsFromUrl(truelayerClientId, url) {
   const fullUrl = new URL(url);
@@ -27,7 +29,7 @@ export async function credentialsFromUrl(truelayerClientId, url) {
     if (tokens) {
       try {
         console.log("getting /me");
-        me = await DataAPIClient.getMe(tokens.access_token);
+        me = await fetchMe(tokens.access_token);
       } catch (e) {
         console.log("/me failure");
         console.log(e.error);
