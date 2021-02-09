@@ -26,9 +26,9 @@ Show your bank balances in your Menu Bar using TrueLayer.
 - Multiple accounts per bank
 - Click account to copy balance
 
-## Usage
+## Download
 
-Docs coming soon. Follow #development below and run `yarn dev` for now.
+Head over to [Releases](https://github.com/scottrobertson/balance-menubar/releases) to download the application.
 
 ## Development
 
