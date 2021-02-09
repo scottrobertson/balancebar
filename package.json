@@ -61,6 +61,7 @@
     "postcss": "^8.2.4",
     "public-ip": "^4.0.3",
     "request": "^2.88.2",
+    "request-promise": "^4.2.6",
     "tailwindcss": "^2.0.2",
     "vue": "^2.5.16",
     "vue-clipboard2": "^0.3.1",
