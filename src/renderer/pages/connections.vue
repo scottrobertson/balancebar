@@ -1,5 +1,5 @@
 <template>
-  <div class="dark:bg-black">
+  <div class="dark:bg-black bg-white">
     <div class="">
       <div class="bg-white px-4 py-3 border-b border-gray-200 dark:bg-black dark:border-gray-800 pb-5">
         <div class="-ml-4 -mt-2 flex items-center justify-between flex-wrap">

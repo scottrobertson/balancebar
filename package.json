@@ -57,6 +57,7 @@
     "axios": "^0.21",
     "keytar": "^7.3.0",
     "lodash": "^4.17.20",
+    "menubar": "^9.0.2",
     "postcss": "^8.2.4",
     "public-ip": "^4.0.3",
     "request": "^2.88.2",

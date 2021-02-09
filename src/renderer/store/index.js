@@ -11,7 +11,7 @@ export default new Vuex.Store({
   modules,
   plugins: [
     createPersistedState({
-      // whitelist: ['accounts', 'lastRefreshedAt', 'credentials']
+      blacklist: ["isConnecting"],
     }),
   ],
   strict: process.env.NODE_ENV !== "production",

@@ -7,6 +7,7 @@ const state = {
   lastRefreshedAt: undefined,
   truelayerClientId: undefined,
   credentials: undefined,
+  oAuthConnecting: false,
 };
 
 const mutations = {
@@ -15,17 +16,19 @@ const mutations = {
   },
 
   async resetCredentials(state) {
-    await Promise.all(
-      state.credentials.map(async (credential) => {
-        await deleteRefreshToken(credential);
-      })
-    );
+    state.credentials.forEach((credential) => {
+      deleteRefreshToken(credential);
+    });
 
     state.credentials = undefined;
   },
 
   setAccounts(state, accounts) {
     state.accounts = accounts;
+  },
+
+  setConnecting(state, connecting) {
+    state.oAuthConnecting = connecting;
   },
 
   async deleteCredential(state, credential) {
@@ -78,6 +81,10 @@ const actions = {
     commit("setTrueLayer", truelayer);
   },
 
+  setConnecting({ commit }, connecting) {
+    commit("setConnecting", connecting);
+  },
+
   addCredential({ commit, dispatch }, credential) {
     commit("addCredentials", credential);
     dispatch("refreshAccounts");
@@ -113,6 +120,9 @@ const getters = {
   },
   truelayerClientId(state) {
     return state.truelayerClientId;
+  },
+  isConnecting(state) {
+    return state.oAuthConnecting;
   },
 };
 

@@ -14,19 +14,11 @@
       ::-webkit-scrollbar {
         display: none;
       }
-
-      @media (prefers-color-scheme: dark) {
-        body { background:  #000; }
-      }
-
-      @media (prefers-color-scheme: light) {
-        body { background:  #fff; }
-      }
     </style>
 
   </head>
 
-  <body>
+  <body class="dark:bg-black bg-white">
     <div id="app"></div>
     <% if (!htmlWebpackPlugin.options.isBrowser && !htmlWebpackPlugin.options.isDevelopment) { %>
       <script>
