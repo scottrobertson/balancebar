@@ -1,4 +1,4 @@
-import { getRefreshToken, storeRefreshToken } from "./secure-storage.js";
+import { getRefreshToken, storeAccessToken, storeRefreshToken } from "./secure-storage.js";
 
 import { fetchAccountBalance, fetchCardBalance, fetchCards, fetchAccounts } from "./truelayer.js";
 import { refreshAccessToken } from "./truelayer-oauth.js";
@@ -80,6 +80,7 @@ async function getAccountsForCredential(truelayerClientId, credential) {
       }
 
       accessToken = refreshedToken.access_token;
+      await storeAccessToken(credential, accessToken); // We store this for debugging later. It's not used directly yet.
     } catch (e) {
       console.log(`[${credential.credentials_id}] Unable to get access token: `, e.error);
       accounts.push(noBalanceAccountObject(credential, "We have been unable to refresh the access tokens, please disconnect and try again."));

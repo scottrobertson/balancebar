@@ -13,6 +13,18 @@ export async function deleteRefreshToken(credentials) {
   return await keytar.deletePassword(KEYCHAIN_NAMESPACE, `credentials_${credentials.credentials_id}_refresh_token`);
 }
 
+export async function storeAccessToken(credentials, accessToken) {
+  return await keytar.setPassword(KEYCHAIN_NAMESPACE, `credentials_${credentials.credentials_id}_access_token`, accessToken);
+}
+
+export async function getAccessToken(credentials) {
+  return await keytar.getPassword(KEYCHAIN_NAMESPACE, `credentials_${credentials.credentials_id}_access_token`);
+}
+
+export async function deleteAccessToken(credentials) {
+  return await keytar.deletePassword(KEYCHAIN_NAMESPACE, `credentials_${credentials.credentials_id}_access_token`);
+}
+
 export async function storeTruelayerSecret(secret) {
   return await keytar.setPassword(KEYCHAIN_NAMESPACE, "truelayer-client-secret", secret);
 }
