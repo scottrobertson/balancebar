@@ -1,6 +1,6 @@
-# Balance
+# Balance Bar App
 
-Show your bank balances in your Menu Bar using TrueLayer.
+View your bank balances in your Menu Bar using Open Banking.
 
 <div align="center">
   <img
