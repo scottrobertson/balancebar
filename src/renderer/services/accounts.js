@@ -40,7 +40,7 @@ async function getAccountObject(type, credential, accessToken, object) {
 
     balance = new Intl.NumberFormat("gb-EN", { style: "currency", currency: balance.currency }).format(useBalance);
   } catch (e) {
-    console.log(`[${credential.credentials_id}] Account balance fetch failure: ${object.account_id}`);
+    console.error(`[${credential.credentials_id}] Account balance fetch failure: ${object.account_id}`);
     balance = `Unable to get balance: ${e.error}`;
   }
 
@@ -88,7 +88,7 @@ async function getAccountsForCredential(truelayerClientId, credential) {
       accessToken = refreshedToken.access_token;
       await storeAccessToken(credential, accessToken); // We store this for debugging later. It's not used directly yet.
     } catch (e) {
-      console.log(`[${credential.credentials_id}] Unable to get access token: `, e.error);
+      console.error(`[${credential.credentials_id}] Unable to get access token: `, e.error);
       accounts.push(noBalanceAccountObject(credential, "We have been unable to refresh the access tokens, please disconnect and try again."));
     }
 
@@ -98,7 +98,7 @@ async function getAccountsForCredential(truelayerClientId, credential) {
       accounts.push(...accountsAndCards);
     }
   } else {
-    console.log(`[${credential.credentials_id}] No refresh token found`);
+    console.error(`[${credential.credentials_id}] No refresh token found`);
     accounts.push(noBalanceAccountObject(credential, "No refresh token found, please reconnect."));
   }
 
@@ -119,7 +119,7 @@ async function getCards(accessToken, credential) {
       console.log(`[${credential.credentials_id}] Fetching cards`);
       cards = await fetchCards(accessToken);
     } catch (e) {
-      console.log(`[${credential.credentials_id}] Unable to fetch cards`, e.error);
+      console.error(`[${credential.credentials_id}] Unable to fetch cards`, e.error);
       returnCards.push(noBalanceAccountObject(credential));
     }
 
@@ -147,7 +147,7 @@ async function getAccounts(accessToken, credential) {
       console.log(`[${credential.credentials_id}] Fetching accounts`);
       accounts = await fetchAccounts(accessToken);
     } catch (e) {
-      console.log(`[${credential.credentials_id}] Unable to fetch accounts`);
+      console.error(`[${credential.credentials_id}] Unable to fetch accounts`);
       returnAccounts.push(noBalanceAccountObject(credential));
     }
 

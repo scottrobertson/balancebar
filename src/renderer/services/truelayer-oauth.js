@@ -63,9 +63,8 @@ export async function credentialsFromUrl(truelayerClientId, url) {
       console.log("exchanging tokens");
       tokens = await exchangeCodeForToken(truelayerClientId, code);
     } catch (e) {
-      console.log("tokens failure");
-      console.log(e.error);
-      console.log(e);
+      console.error("tokens failure");
+      console.error(e.error);
     }
 
     if (tokens) {
@@ -73,8 +72,8 @@ export async function credentialsFromUrl(truelayerClientId, url) {
         console.log("getting /me");
         me = await fetchMe(tokens.access_token);
       } catch (e) {
-        console.log("/me failure");
-        console.log(e.error);
+        console.error("/me failure");
+        console.error(e.error);
       }
 
       if (me) {
@@ -85,6 +84,6 @@ export async function credentialsFromUrl(truelayerClientId, url) {
       }
     }
   } else {
-    console.log("No code found in URL");
+    console.error("No code found in URL");
   }
 }
