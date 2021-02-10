@@ -28,7 +28,7 @@ View your bank balances in your Menu Bar using Open Banking.
 
 ## Download
 
-Head over to [Releases](https://github.com/scottrobertson/balance-menubar/releases) to download the application.
+Head over to [Releases](https://github.com/scottrobertson/balancebar/releases) to download the application.
 
 ## Development
 
