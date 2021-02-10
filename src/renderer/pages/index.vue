@@ -95,7 +95,9 @@ export default {
 
     // Redirect if we don't have TrueLayer connected
     if (this.hasTruelayerClient) {
-      this.refreshAccounts();
+      if (!this.accounts) {
+        this.refreshAccounts();
+      }
     } else {
       this.$router.push("/truelayer");
     }
