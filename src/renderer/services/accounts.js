@@ -31,7 +31,13 @@ async function getAccountObject(type, credential, accessToken, object) {
     }
 
     balance = balance.results[0];
-    const useBalance = type === "card" ? -balance.current : balance.available;
+    let useBalance = balance.available;
+
+    // Use current balance for cards, and use a negative number (unless it's zero)
+    if (type === "card") {
+      useBalance = balance.current !== 0 ? -balance.current : 0;
+    }
+
     balance = new Intl.NumberFormat("gb-EN", { style: "currency", currency: balance.currency }).format(useBalance);
   } catch (e) {
     console.log(`[${credential.credentials_id}] Account balance fetch failure: ${object.account_id}`);
