@@ -38,3 +38,15 @@ export async function fetchAccounts(accessToken) {
 export async function fetchMe(accessToken) {
   return await performGet(`/data/v1/me`, accessToken);
 }
+
+export async function fetchDebug(accessToken) {
+  const requestParams = {
+    uri: "https://auth.truelayer.com/api/debug",
+    json: true,
+    body: {
+      access_token: accessToken,
+    },
+  };
+
+  return await request.post(requestParams);
+}
