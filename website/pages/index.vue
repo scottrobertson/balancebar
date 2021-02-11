@@ -1,5 +1,9 @@
 <template>
   <div>
+    <!-- Cloudflare Web Analytics -->
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "85f63cfe2cde479c852180d29cc857cf"}'></script>
+    <!-- End Cloudflare Web Analytics -->
+
     <div class="bg-white pb-8 sm:pb-12 lg:pb-12">
       <div class="pt-8 overflow-hidden sm:pt-12 lg:relative lg:py-48">
         <div class="mx-auto max-w-md px-4 sm:max-w-3xl sm:px-6 lg:px-8 lg:max-w-7xl lg:grid lg:grid-cols-2 lg:gap-24">
