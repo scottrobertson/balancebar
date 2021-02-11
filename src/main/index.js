@@ -59,6 +59,13 @@ app.once("ready", () => {
         mb.app.quit();
       },
     },
+    {
+      type: "separator",
+    },
+    {
+      label: `Version: ${process.env.npm_package_version}`,
+      type: "normal",
+    },
   ]);
 
   tray.on("right-click", (event, bounds) => {
