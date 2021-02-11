@@ -1,6 +1,6 @@
 {
   "name": "balancebar",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "author": "Scott Robertson <scottymeuk@gmail.com>",
   "description": "View your bank balances in your Menu Bar",
   "license": "MIT",
@@ -58,7 +58,7 @@
       {
         "provider": "github",
         "owner": "scottrobertson",
-        "repo": "balance-menubar"
+        "repo": "balancebar"
       }
     ],
     "protocols": [
