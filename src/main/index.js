@@ -142,15 +142,4 @@ autoUpdater.on("update-not-available", () => {
 
 autoUpdater.on("update-downloaded", () => {
   console.log("Update downloaded");
-
-  const dialogOpts = {
-    type: "info",
-    buttons: ["Restart", "Later"],
-    title: "Application Update",
-    detail: "A new version has been downloaded. Restart the application to apply the updates.",
-  };
-
-  dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) autoUpdater.quitAndInstall();
-  });
 });
