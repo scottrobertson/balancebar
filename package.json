@@ -1,10 +1,11 @@
 {
   "name": "balancebar",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "Scott Robertson <scottymeuk@gmail.com>",
   "description": "View your bank balances in your Menu Bar",
   "license": "MIT",
   "main": "./dist/electron/main.js",
+  "private": true,
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
