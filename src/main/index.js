@@ -66,7 +66,7 @@ app.once("ready", () => {
       type: "separator",
     },
     {
-      label: `Version: ${process.env.npm_package_version}`,
+      label: `Version: ${app.getVersion()}`,
       type: "normal",
       click: () => {
         autoUpdater.checkForUpdates();
