@@ -18,7 +18,7 @@
         <div class="ml-4 mt-2 flex-shrink-0 pt-2">
           <button
             type="button"
-            class="relative inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="relative inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black dark:bg-gray-700 hover:bg-gray-800 focus:outline-none"
             @click="startTrueLayerAuth"
           >
             Add
@@ -63,11 +63,9 @@ export default {
     },
 
     async startTrueLayerAuth() {
-      await this.$store.dispatch("setConnecting", true);
-      await this.$store.dispatch("resetAccounts");
-      await new Promise((r) => setTimeout(r, 500));
-
-      this.$electron.ipcRenderer.sendSync("oauth-start", this.$store.getters.truelayerClientId);
+      this.$electron.shell.openExternal(
+        `https://auth.truelayer.com/?response_type=code&client_id=${this.$store.getters.truelayerClientId}&scope=info%20accounts%20balance%20cards%20offline_access&redirect_uri=balancebar://oauth&providers=uk-ob-all%20uk-oauth-all%20uk-cs-mock`
+      );
     },
 
     refreshAccounts() {

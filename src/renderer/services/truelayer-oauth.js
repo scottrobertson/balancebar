@@ -2,7 +2,7 @@ import * as request from "request-promise";
 import { getTruelayerSecret } from "./secure-storage";
 import { fetchMe } from "./truelayer.js";
 
-const redirectUrl = "http://localhost/oauth";
+const redirectUrl = "balancebar://oauth";
 
 async function exchangeCodeForToken(truelayerClientId, code) {
   const requestOptions = {
@@ -60,7 +60,7 @@ export async function credentialsFromUrl(truelayerClientId, url) {
     let me;
 
     try {
-      console.log("exchanging tokens");
+      console.log(`exchanging tokens using code ${code} and clientId: ${truelayerClientId}`);
       tokens = await exchangeCodeForToken(truelayerClientId, code);
     } catch (e) {
       console.error("tokens failure");

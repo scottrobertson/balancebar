@@ -1,10 +1,11 @@
 <template>
-  <div class="dark:bg-black bg-white">
+  <div class="dark:bg-black bg-white select-none">
     <div class="">
       <div class="bg-white px-4 py-3 border-b border-gray-200 dark:bg-black dark:border-gray-800 pb-5">
         <div class="-ml-4 -mt-2 flex items-center justify-between flex-wrap">
           <div class="ml-4 mt-2">
             <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white pt-2">Connections</h3>
+            <a class="underline cursor-pointer text-gray-400 text-xs" @click="$router.push('/')">Go Back</a>
           </div>
         </div>
       </div>

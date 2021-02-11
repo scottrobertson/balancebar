@@ -1,19 +1,17 @@
 <template>
-  <div class="dark:bg-black bg-white">
+  <div class="dark:bg-black bg-white select-none">
     <div class="bg-white px-4 py-3 border-b border-gray-200 dark:bg-black dark:border-gray-800">
       <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Setup TrueLayer</h3>
     </div>
 
     <div class="pl-5 pr-5 bg-white dark:bg-black dark:text-white">
-      <p class="">We need your TrueLayer Client ID/Secret. Head over there, and create an application</p>
+      <p class="">Head over to TrueLayer and create an application. We need your Client ID/Secret.</p>
 
       <p class="mt-5">
         <a class="cursor-pointer underline" @click="openLink('https://console.truelayer.com')">https://console.truelayer.com</a>
       </p>
 
-      <p class="mt-5">The redirect url should be: http://localhost/oauth</p>
-
-      <p class="mt-5">And then enter the details below</p>
+      <p class="mt-5">The redirect url should be: balancebar://oauth</p>
 
       <form @submit="saveCredentials">
         <div class="mt-5">

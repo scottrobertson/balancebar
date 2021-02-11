@@ -1,9 +1,9 @@
 {
-  "name": "balance-menubar",
+  "name": "balancebar",
   "version": "0.2.0",
   "author": "Scott Robertson <scottymeuk@gmail.com>",
-  "description": "An electron-vue project",
-  "license": null,
+  "description": "View your bank balances in your Menu Bar",
+  "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
@@ -18,8 +18,8 @@
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js"
   },
   "build": {
-    "productName": "balance-menubar",
-    "appId": "com.scottrobertson.balance-menubar",
+    "productName": "Balance Bar",
+    "appId": "com.scottrobertson.balancebar",
     "directories": {
       "output": "build"
     },
@@ -42,7 +42,10 @@
       ]
     },
     "mac": {
-      "icon": "build/icons/icon.icns"
+      "icon": "build/icons/icon.icns",
+      "extendInfo": {
+        "LSMultipleInstancesProhibited": true
+      }
     },
     "win": {
       "icon": "build/icons/icon.ico"
@@ -50,11 +53,22 @@
     "linux": {
       "icon": "build/icons"
     },
-    "publish": [{
-      "provider": "github",
-      "owner": "scottrobertson",
-      "repo": "balance-menubar"
-    }]
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "scottrobertson",
+        "repo": "balance-menubar"
+      }
+    ],
+    "protocols": [
+      {
+        "name": "balancebar",
+        "role": "Viewer",
+        "schemes": [
+          "balancebar"
+        ]
+      }
+    ]
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.2.1",

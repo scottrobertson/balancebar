@@ -1,5 +1,5 @@
 <template>
-  <div class="dark:bg-black bg-white">
+  <div class="dark:bg-black bg-white select-none">
     <div v-if="isConnecting">
       <div class="spinner">
         <div class="double-bounce1" />
@@ -105,6 +105,8 @@ export default {
 
   methods: {
     async addCredentialsFromUrl(url) {
+      console.log("oAuth callback url received:", url);
+
       this.$store.dispatch("resetAccounts");
 
       const credentials = await credentialsFromUrl(this.$store.getters.truelayerClientId, url);
@@ -130,14 +132,6 @@ export default {
 </script>
 
 <style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
-
 .spinner {
   width: 40px;
   height: 40px;
