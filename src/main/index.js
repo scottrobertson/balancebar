@@ -1,6 +1,6 @@
 "use strict";
 
-import { app, Tray, nativeTheme, Menu, nativeImage } from "electron";
+import { app, Tray, nativeTheme, Menu, nativeImage, shell, dialog } from "electron";
 import { autoUpdater } from "electron-updater";
 const log = require("electron-log");
 const { menubar } = require("menubar");
@@ -17,10 +17,10 @@ console.log("Starting env:", process.env.NODE_ENV);
 app.once("ready", () => {
   app.setAsDefaultProtocolClient("balancebar");
 
-  // if (process.env.NODE_ENV === "production") {
-  //   console.log("Automatically checking for updates");
-  //   autoUpdater.checkForUpdates();
-  // }
+  if (process.env.NODE_ENV === "production") {
+    console.log("Automatically checking for updates");
+    autoUpdater.checkForUpdates();
+  }
 
   const icon = nativeImage.createFromDataURL(base64Icon);
   const tray = new Tray(icon);
@@ -121,6 +121,19 @@ app.once("ready", () => {
 
 autoUpdater.on("update-available", () => {
   console.log("Update available");
+
+  const dialogOpts = {
+    type: "info",
+    buttons: ["Download", "Maybe Later"],
+    title: "Balance Bar Update Available",
+    detail: "A new version of Balance Bar is available, do you want to download it?",
+  };
+
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0) {
+      shell.openExternal("https://github.com/scottrobertson/balancebar/releases/latest");
+    }
+  });
 });
 
 autoUpdater.on("update-not-available", () => {
