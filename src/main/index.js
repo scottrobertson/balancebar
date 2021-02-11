@@ -10,7 +10,10 @@ const winURL = process.env.NODE_ENV === "development" ? "http://localhost:9080" 
 
 app.once("ready", () => {
   app.setAsDefaultProtocolClient("balancebar");
-  autoUpdater.checkForUpdates();
+
+  if (process.env.NODE_ENV === "production") {
+    autoUpdater.checkForUpdates();
+  }
 
   const icon = nativeImage.createFromDataURL(base64Icon);
   const tray = new Tray(icon);
@@ -65,6 +68,9 @@ app.once("ready", () => {
     {
       label: `Version: ${process.env.npm_package_version}`,
       type: "normal",
+      click: () => {
+        autoUpdater.checkForUpdates();
+      },
     },
   ]);
 
