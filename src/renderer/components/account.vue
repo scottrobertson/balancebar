@@ -30,7 +30,7 @@ export default {
   data() {
     return {
       balanceCopied: false,
-      screenshotMode: true, // A development helper to hide details for screenshots
+      screenshotMode: false, // A development helper to hide details for screenshots
     };
   },
 
