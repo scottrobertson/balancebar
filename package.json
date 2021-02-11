@@ -75,6 +75,7 @@
     "@tailwindcss/forms": "^0.2.1",
     "autoprefixer": "^10.2.4",
     "axios": "^0.21",
+    "electron-log": "^4.3.1",
     "electron-updater": "^4.3.5",
     "keytar": "^7.3.0",
     "lodash": "^4.17.20",
