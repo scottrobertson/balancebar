@@ -2,7 +2,7 @@ import * as request from "request-promise";
 import publicIp from "public-ip";
 import uuid from "uuid";
 
-import { TrueLayerCardOrAccount, TrueLayerBalance, TrueLayerMe, TrueLayerDebug } from "../interfaces.ts";
+import { TrueLayerCardOrAccount, TrueLayerBalance, TrueLayerMe, TrueLayerDebug } from "./interfaces";
 
 const baseUrl = "https://api.truelayer.com";
 
@@ -22,23 +22,30 @@ async function performGet(url: string, accessToken: string) {
 }
 
 export async function fetchAccountBalance(accountId: string, accessToken: string): Promise<TrueLayerBalance> {
-  return await performGet(`/data/v1/accounts/${accountId}/balance`, accessToken);
+  console.log("Fetching balance", `/data/v1/accounts/${accountId}/balance`, accessToken);
+
+  const balance = await performGet(`/data/v1/accounts/${accountId}/balance`, accessToken);
+  return balance.results[0];
 }
 
 export async function fetchCardBalance(cardId: string, accessToken: string): Promise<TrueLayerBalance> {
-  return await performGet(`/data/v1/cards/${cardId}/balance`, accessToken);
+  const balance = await performGet(`/data/v1/cards/${cardId}/balance`, accessToken);
+  return balance.results[0];
 }
 
-export async function fetchCards(accessToken: string): Promise<TrueLayerCardOrAccount> {
-  return await performGet(`/data/v1/cards`, accessToken);
+export async function fetchCards(accessToken: string): Promise<TrueLayerCardOrAccount[]> {
+  const response = await performGet(`/data/v1/cards`, accessToken);
+  return response.results;
 }
 
-export async function fetchAccounts(accessToken: string): Promise<TrueLayerCardOrAccount> {
-  return await performGet(`/data/v1/accounts`, accessToken);
+export async function fetchAccounts(accessToken: string): Promise<TrueLayerCardOrAccount[]> {
+  const response = await performGet(`/data/v1/accounts`, accessToken);
+  return response.results;
 }
 
 export async function fetchMe(accessToken: string): Promise<TrueLayerMe> {
-  return await performGet(`/data/v1/me`, accessToken);
+  const response = await performGet(`/data/v1/me`, accessToken);
+  return response.results[0];
 }
 
 export async function fetchDebug(accessToken: string): Promise<TrueLayerDebug> {

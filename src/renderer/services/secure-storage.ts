@@ -1,7 +1,7 @@
 "use strict";
 
 import keytar from "keytar";
-import { Credential } from "../interfaces.ts";
+import { Credential } from "./interfaces";
 
 const KEYCHAIN_NAMESPACE = "balance-menubar";
 

@@ -8,7 +8,7 @@ module.exports = {
     browser: true,
     node: true,
   },
-  extends: ["plugin:vue/recommended", "plugin:prettier-vue/recommended", "prettier/vue"],
+  extends: ["plugin:import/errors", "plugin:import/warnings", "plugin:vue/recommended", "eslint:recommended", "plugin:prettier-vue/recommended", "prettier/vue"],
   globals: {
     __static: true,
   },
@@ -46,10 +46,11 @@ module.exports = {
       ],
       rules: {
         "import/extensions": "off",
+        "prettier-vue/prettier": ["warn"],
       },
       env: {
         browser: true,
-        jest: true,
+        node: true,
       },
     },
   ],

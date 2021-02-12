@@ -7,7 +7,14 @@ export interface ReturnedBank {
 export interface ReturnedAccount {
   bank: ReturnedBank;
   name: string;
-  error: string;
+  balance?: string;
+  error?: string;
+}
+
+export interface Credential {
+  credentials_id: string;
+  scopes: string[];
+  provider: TrueLayerProvider;
 }
 
 export interface TrueLayerCardOrAccount {
@@ -15,13 +22,14 @@ export interface TrueLayerCardOrAccount {
   display_name: string;
 }
 
-export interface Credential {
-  credentials_id: string;
-}
-
 export interface TrueLayerAccessToken {
   access_token: string;
   refresh_token: string;
+}
+
+export interface TrueLayerClientPair {
+  clientId: string;
+  clientSecret: string;
 }
 
 export interface TrueLayerCredentials {

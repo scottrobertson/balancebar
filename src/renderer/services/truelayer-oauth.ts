@@ -4,7 +4,7 @@ import { fetchMe } from "./truelayer";
 
 const redirectUrl = "balancebar://oauth";
 
-import { TrueLayerAccessToken, TrueLayerCredentials } from "../interfaces";
+import { TrueLayerAccessToken, TrueLayerCredentials } from "./interfaces";
 
 async function exchangeCodeForToken(truelayerClientId: string, code: string) {
   const requestOptions = {
@@ -78,10 +78,10 @@ export async function credentialsFromUrl(truelayerClientId: string, url: string)
         console.error(e.error);
       }
 
-      if (me) {
+      if (me?.credentials_id) {
         return {
           refreshToken: tokens.refresh_token,
-          credentials: me.results[0],
+          credentials: me,
         };
       }
     }
