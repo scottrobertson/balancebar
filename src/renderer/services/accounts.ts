@@ -1,11 +1,11 @@
 "use strict";
 
-import { getRefreshToken, storeAccessToken, storeRefreshToken } from "./secure-storage.ts";
+import { getRefreshToken, storeAccessToken, storeRefreshToken } from "./secure-storage";
 
-import { fetchAccountBalance, fetchCardBalance, fetchCards, fetchAccounts } from "./truelayer.ts";
-import { refreshAccessToken } from "./truelayer-oauth.ts";
+import { fetchAccountBalance, fetchCardBalance, fetchCards, fetchAccounts } from "./truelayer";
+import { refreshAccessToken } from "./truelayer-oauth";
 
-import { ReturnedAccount, TrueLayerCardOrAccount, Credential } from "../interfaces.ts";
+import { ReturnedAccount, TrueLayerCardOrAccount, Credential } from "../interfaces";
 
 export async function refreshAllAccounts(truelayerClientId: string, credentials: Credential[]): Promise<ReturnedAccount[]> {
   const allAccounts: ReturnedAccount[] = [];

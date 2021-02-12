@@ -1,10 +1,10 @@
 import * as request from "request-promise";
-import { getTruelayerSecret } from "./secure-storage.ts";
-import { fetchMe } from "./truelayer.ts";
+import { getTruelayerSecret } from "./secure-storage";
+import { fetchMe } from "./truelayer";
 
 const redirectUrl = "balancebar://oauth";
 
-import { TrueLayerAccessToken, TrueLayerCredentials } from "../interfaces.ts";
+import { TrueLayerAccessToken, TrueLayerCredentials } from "../interfaces";
 
 async function exchangeCodeForToken(truelayerClientId: string, code: string) {
   const requestOptions = {
