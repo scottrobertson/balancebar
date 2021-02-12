@@ -1,10 +1,14 @@
-import { getRefreshToken, storeAccessToken, storeRefreshToken } from "./secure-storage.js";
+"use strict";
+
+import { getRefreshToken, storeAccessToken, storeRefreshToken } from "./secure-storage.ts";
 
 import { fetchAccountBalance, fetchCardBalance, fetchCards, fetchAccounts } from "./truelayer.js";
-import { refreshAccessToken } from "./truelayer-oauth.js";
+import { refreshAccessToken } from "./truelayer-oauth.ts";
 
-export async function refreshAllAccounts(truelayerClientId, credentials) {
-  let allAccounts = [];
+import { ReturnedAccount, TrueLayerCardOrAccount, Credential } from "../interfaces.ts";
+
+export async function refreshAllAccounts(truelayerClientId: string, credentials: Credential[]): Promise<ReturnedAccount[]> {
+  const allAccounts: ReturnedAccount[] = [];
 
   if (credentials && credentials.length) {
     await Promise.all(
@@ -18,7 +22,7 @@ export async function refreshAllAccounts(truelayerClientId, credentials) {
   return allAccounts;
 }
 
-async function getAccountObject(type, credential, accessToken, object) {
+async function getAccountObject(type: string, credential: Credential, accessToken: string, object: TrueLayerCardOrAccount) {
   console.log(`[${credential.credentials_id}] Fetching balance for ${object.account_id}`);
 
   let balance;
@@ -51,7 +55,7 @@ async function getAccountObject(type, credential, accessToken, object) {
   };
 }
 
-function bankObject(credential) {
+function bankObject(credential: Credential) {
   return {
     name: credential.provider.display_name,
     icon: credential.provider.logo_uri.replace("/logo/", "/icon/"),
@@ -59,7 +63,7 @@ function bankObject(credential) {
   };
 }
 
-function noBalanceAccountObject(credential, error = "We have not been able to fetch accounts for this bank at this time. Either try again, or reconnect.") {
+function noBalanceAccountObject(credential: Credential, error = "We have not been able to fetch accounts for this bank at this time. Either try again, or reconnect.") {
   return {
     bank: bankObject(credential),
     name: "Unable to fetch accounts",
@@ -67,7 +71,7 @@ function noBalanceAccountObject(credential, error = "We have not been able to fe
   };
 }
 
-async function getAccountsForCredential(truelayerClientId, credential) {
+async function getAccountsForCredential(truelayerClientId: string, credential: Credential) {
   console.log(`[${credential.credentials_id}] Processing`);
 
   let accessToken;
@@ -105,12 +109,12 @@ async function getAccountsForCredential(truelayerClientId, credential) {
   return accounts;
 }
 
-async function getAccountsAndCards(accessToken, credential) {
-  let [accounts, cards] = await Promise.all([getAccounts(accessToken, credential), getCards(accessToken, credential)]);
+async function getAccountsAndCards(accessToken: string, credential: Credential) {
+  const [accounts, cards] = await Promise.all([getAccounts(accessToken, credential), getCards(accessToken, credential)]);
   return [...accounts, ...cards];
 }
 
-async function getCards(accessToken, credential) {
+async function getCards(accessToken: string, credential: Credential) {
   const returnCards = [];
   let cards;
 
@@ -125,7 +129,7 @@ async function getCards(accessToken, credential) {
 
     if (cards) {
       await Promise.all(
-        cards.results.map(async (card) => {
+        cards.results.map(async (card: TrueLayerCardOrAccount) => {
           const cardObject = await getAccountObject("card", credential, accessToken, card);
           returnCards.push(cardObject);
         })
@@ -138,7 +142,7 @@ async function getCards(accessToken, credential) {
   return returnCards;
 }
 
-async function getAccounts(accessToken, credential) {
+async function getAccounts(accessToken: string, credential: Credential) {
   const returnAccounts = [];
   let accounts;
 
@@ -153,7 +157,7 @@ async function getAccounts(accessToken, credential) {
 
     if (accounts) {
       await Promise.all(
-        accounts.results.map(async (account) => {
+        accounts.results.map(async (account: TrueLayerCardOrAccount) => {
           const accountObject = await getAccountObject("account", credential, accessToken, account);
           returnAccounts.push(accountObject);
         })

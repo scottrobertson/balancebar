@@ -12,8 +12,8 @@
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
     "dev": "node .electron-vue/dev-runner.js",
-    "lint": "eslint --ext .js,.vue src",
-    "lint:fix": "eslint --ext .js,.vue --fix src",
+    "lint": "eslint --ext .js,.vue,.ts src",
+    "lint:fix": "eslint --ext .js,.vue,.ts --fix src",
     "pack": "npm run pack:main && npm run pack:renderer",
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js"
@@ -94,6 +94,8 @@
     "vuex-electron": "^1.0.0"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.15.0",
+    "@typescript-eslint/parser": "^4.15.0",
     "ajv": "^7",
     "babel-core": "^6.26.3",
     "babel-loader": "^7",
@@ -135,6 +137,8 @@
     "prettier": "^2.2.1",
     "sass-loader": "^10",
     "style-loader": "^2",
+    "ts-loader": "^8.0.17",
+    "typescript": "^4.1.5",
     "url-loader": "^4",
     "vue-html-loader": "^1.2.4",
     "vue-loader": "^15.2.4",

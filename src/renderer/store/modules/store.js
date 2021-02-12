@@ -1,6 +1,6 @@
 import { sortBy } from "lodash";
-import { storeRefreshToken, deleteTruelayerSecret, storeTruelayerSecret, deleteRefreshToken, deleteAccessToken } from "../../services/secure-storage.js";
-import { refreshAllAccounts } from "../../services/accounts.js";
+import { storeRefreshToken, deleteTruelayerSecret, storeTruelayerSecret, deleteRefreshToken, deleteAccessToken } from "../../services/secure-storage.ts";
+import { refreshAllAccounts } from "../../services/accounts.ts";
 
 const state = {
   accounts: undefined,

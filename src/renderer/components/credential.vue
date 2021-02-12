@@ -25,7 +25,7 @@
 
 <script>
 import { fetchDebug } from "../services/truelayer.js";
-import { getAccessToken } from "../services/secure-storage";
+import { getAccessToken } from "../services/secure-storage.ts";
 
 export default {
   props: {
