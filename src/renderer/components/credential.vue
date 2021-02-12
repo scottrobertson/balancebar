@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { fetchDebug } from "../services/truelayer.js";
+import { fetchDebug } from "../services/truelayer.ts";
 import { getAccessToken } from "../services/secure-storage.ts";
 
 export default {

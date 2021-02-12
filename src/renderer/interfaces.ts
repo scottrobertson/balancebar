@@ -28,3 +28,28 @@ export interface TrueLayerCredentials {
   refreshToken: string;
   credentials: Credential;
 }
+
+export interface TrueLayerBalance {
+  currency: string;
+  available: number;
+  current: number;
+  overdraft: number;
+}
+
+export interface TrueLayerProvider {
+  display_name: string;
+  logo_uri: string;
+  provider_id: string;
+}
+
+export interface TrueLayerMe {
+  credentials_id: string;
+  provider: TrueLayerProvider;
+  scopes: string[];
+}
+
+export interface TrueLayerDebug {
+  credentials_id: string;
+  debug_id: string;
+  provider_id: string;
+}

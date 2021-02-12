@@ -2,7 +2,7 @@
 
 import { getRefreshToken, storeAccessToken, storeRefreshToken } from "./secure-storage.ts";
 
-import { fetchAccountBalance, fetchCardBalance, fetchCards, fetchAccounts } from "./truelayer.js";
+import { fetchAccountBalance, fetchCardBalance, fetchCards, fetchAccounts } from "./truelayer.ts";
 import { refreshAccessToken } from "./truelayer-oauth.ts";
 
 import { ReturnedAccount, TrueLayerCardOrAccount, Credential } from "../interfaces.ts";

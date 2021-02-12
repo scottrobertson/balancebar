@@ -1,6 +1,6 @@
 import * as request from "request-promise";
 import { getTruelayerSecret } from "./secure-storage.ts";
-import { fetchMe } from "./truelayer.js";
+import { fetchMe } from "./truelayer.ts";
 
 const redirectUrl = "balancebar://oauth";
 
