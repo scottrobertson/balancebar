@@ -127,7 +127,7 @@ autoUpdater.on("update-available", () => {
     type: "info",
     buttons: ["Download", "Maybe Later"],
     title: "Balance Bar Update Available",
-    detail: "A new version of Balance Bar is available, do you want to download it?",
+    message: "A new version of Balance Bar is available, do you want to download it?",
   };
 
   dialog.showMessageBox(dialogOpts).then((returnValue) => {
