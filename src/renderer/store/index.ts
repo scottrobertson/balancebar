@@ -155,7 +155,7 @@ const getters = {
   },
 };
 
-const ls = new SecureLS({ isCompression: false });
+const ls = new SecureLS({ isCompression: false, encodingType: "aes" });
 
 export default new Vuex.Store({
   state,
