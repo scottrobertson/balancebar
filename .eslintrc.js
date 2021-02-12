@@ -27,7 +27,7 @@ module.exports = {
 
   overrides: [
     {
-      files: ["*.ts", "**/*.ts"],
+      files: ["*.ts", "**/*.ts", "**/*.vue"],
       parser: "vue-eslint-parser",
       parserOptions: {
         parser: "@typescript-eslint/parser",

@@ -18,11 +18,14 @@
   </li>
 </template>
 
-<script lang="js">
-export default {
+<script lang="ts">
+import { Vue, PropType } from "vue";
+import { ReturnedAccount } from "../services/interfaces";
+
+export default Vue.expand({
   props: {
     account: {
-      type: Object,
+      type: Object as PropType<ReturnedAccount>,
       required: true,
     },
   },
@@ -35,11 +38,11 @@ export default {
   },
 
   methods: {
-    goToConnections() {
+    goToConnections(): void {
       this.$router.push("/connections");
     },
-    copyBalance() {
-      this.$copyText(this.account.balance).then((e) => {
+    copyBalance(): void {
+      this.$copyText(this.account.balance).then(() => {
         this.balanceCopied = true;
 
         setTimeout(() => {
@@ -48,7 +51,7 @@ export default {
       });
     },
   },
-};
+});
 </script>
 
 <style scoped>
