@@ -1,22 +1,17 @@
 import Vue from "vue";
-import VueMoment from "vue-moment";
-import VueElectron from "vue-electron";
+import axios from "axios";
 
-import App from "./App.vue";
-
+import App from "./App";
 import router from "./router";
-
 import store from "./store";
 
 import VueClipboard from "vue-clipboard2";
 
-if (!process.env.IS_WEB) {
-  Vue.use(VueElectron);
-}
-
+if (!process.env.IS_WEB) Vue.use(require("vue-electron"));
+Vue.http = Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
 
-Vue.use(VueMoment);
+Vue.use(require("vue-moment"));
 
 VueClipboard.config.autoSetContainer = true; // add this line
 Vue.use(VueClipboard);
