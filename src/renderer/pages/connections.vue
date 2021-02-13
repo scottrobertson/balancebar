@@ -28,7 +28,7 @@ import Vue from "vue";
 import CredentialComponent from "../components/credential.vue";
 import { Credential } from "../services/interfaces";
 
-export default Vue.extend({
+export default Vue.expand({
   components: {
     CredentialComponent,
   },

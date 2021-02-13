@@ -69,6 +69,12 @@ export default Vue.extend({
     },
   },
 
+  watch: {
+    lastRefreshedAt(newValue: string): void {
+      this.updateLocalRefreshedAt(newValue);
+    },
+  },
+
   async mounted(): Promise<void> {
     await this.$store.dispatch("setConnecting", false);
 
@@ -111,7 +117,7 @@ export default Vue.extend({
         await this.$store.dispatch("addCredential", credentials);
       } else {
         // TODO show error
-        await this.$store.dispatch("refreshAccounts");
+        await this.refreshAccounts();
       }
 
       await this.$store.dispatch("setConnecting", false);

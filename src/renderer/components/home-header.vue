@@ -33,7 +33,7 @@
 import Vue from "vue";
 import { ReturnedAccount, Credential } from "../services/interfaces";
 
-export default Vue.extend({
+export default Vue.expand({
   data() {
     return {
       lastRefreshed: undefined,
@@ -49,12 +49,6 @@ export default Vue.extend({
     },
     credentials(): Credential[] {
       return this.$store.getters.allCredentials;
-    },
-  },
-
-  watch: {
-    lastRefreshedAt(newValue: string): void {
-      this.updateLocalRefreshedAt(newValue);
     },
   },
 

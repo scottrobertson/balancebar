@@ -24,12 +24,13 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from "vue";
+import { Vue, PropType } from "vue";
+
 import { fetchDebug } from "../services/truelayer";
 import { getAccessToken } from "../services/secure-storage";
 import { Credential } from "../services/interfaces";
 
-export default Vue.extend({
+export default Vue.expand({
   props: {
     credential: {
       type: Object as PropType<Credential>,

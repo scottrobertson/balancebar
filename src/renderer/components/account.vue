@@ -19,10 +19,10 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from "vue";
+import { Vue, PropType } from "vue";
 import { ReturnedAccount } from "../services/interfaces";
 
-export default Vue.extend({
+export default Vue.expand({
   props: {
     account: {
       type: Object as PropType<ReturnedAccount>,
