@@ -42,13 +42,15 @@ export default Vue.extend({
       this.$router.push("/connections");
     },
     copyBalance(): void {
-      this.$copyText(this.account.balance).then(() => {
-        this.balanceCopied = true;
+      if (this.account.balance) {
+        this.$copyText(this.account.balance).then(() => {
+          this.balanceCopied = true;
 
-        setTimeout(() => {
-          this.balanceCopied = false;
-        }, 2000);
-      });
+          setTimeout(() => {
+            this.balanceCopied = false;
+          }, 2000);
+        });
+      }
     },
   },
 });

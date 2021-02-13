@@ -81,7 +81,7 @@ export default Vue.extend({
       this.resetAll();
     });
 
-    this.$electron.ipcRenderer.on("handle-oauth", (_event, url) => {
+    this.$electron.ipcRenderer.on("handle-oauth", (_event: any, url: string) => {
       this.addCredentialsFromUrl(url);
     });
 

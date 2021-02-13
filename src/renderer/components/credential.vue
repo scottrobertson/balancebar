@@ -45,7 +45,7 @@ export default Vue.extend({
   },
 
   methods: {
-    async disconnectCredential(): void {
+    async disconnectCredential(): Promise<void> {
       await this.$store.dispatch("deleteCredential", this.credential);
       await this.$store.dispatch("refreshAccounts");
     },
