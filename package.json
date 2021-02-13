@@ -4,7 +4,7 @@
   "author": "Scott Robertson <scottymeuk@gmail.com>",
   "description": "View your bank balances in your Menu Bar",
   "license": "MIT",
-  "main": "./dist/electron/main.js",
+  "main": "./dist/electron/main.ts",
   "private": true,
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
