@@ -5,9 +5,9 @@ import createPersistedState from "vuex-persistedstate";
 import SecureLS from "secure-ls";
 
 import { sortBy } from "lodash";
-import { storeRefreshToken, deleteTruelayerSecret, storeTruelayerSecret, deleteRefreshToken, deleteAccessToken } from "../services/secure-storage";
-import { refreshAllAccounts } from "../services/accounts";
-import { ReturnedAccount, Credential, TrueLayerClientPair, TrueLayerCredentials } from "../services/interfaces";
+import { storeRefreshToken, deleteTruelayerSecret, storeTruelayerSecret, deleteRefreshToken, deleteAccessToken } from "./services/secure-storage";
+import { refreshAllAccounts } from "./services/accounts";
+import { ReturnedAccount, Credential, TrueLayerClientPair, TrueLayerCredentials } from "./services/interfaces";
 
 Vue.use(Vuex);
 

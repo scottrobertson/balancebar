@@ -61,7 +61,7 @@
 <script lang="ts">
 import Vue from "vue";
 
-export default Vue.expand({
+export default Vue.extend({
   data() {
     return {
       clientId: undefined,
