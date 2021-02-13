@@ -71,7 +71,7 @@ async function getAccountsForCredential(truelayerClientId: string, credential: C
   console.log(`[${credential.credentials_id}] Processing`);
 
   let accessToken;
-  const accounts = [];
+  const accounts: ReturnedAccount[] = []
 
   const refreshToken = await getRefreshToken(credential);
 
@@ -111,7 +111,7 @@ async function getAccountsAndCards(accessToken: string, credential: Credential):
 }
 
 async function getCards(accessToken: string, credential: Credential): Promise<ReturnedAccount[]> {
-  const returnCards = [];
+  const returnCards: ReturnedAccount[] = []
   let cards;
 
   if (credential.scopes.includes("cards")) {
@@ -139,7 +139,8 @@ async function getCards(accessToken: string, credential: Credential): Promise<Re
 }
 
 async function getAccounts(accessToken: string, credential: Credential): Promise<ReturnedAccount[]> {
-  const returnAccounts = [];
+  const returnAccounts: ReturnedAccount[] = []
+
   let accounts;
 
   if (credential.scopes.includes("accounts")) {
