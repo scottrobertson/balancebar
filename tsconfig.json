@@ -2,8 +2,6 @@
   "exclude": [
     "dist/**/*.js",
     "tailwind.config.js",
-    "postcss.config.js",
-    "website/*",
     "src/main/index.dev.js",
     "src/main/index.js",
   ],
