@@ -14,7 +14,7 @@
     <div class="">
       <div v-if="credentials">
         <ul class="divide-y divide-gray-200 dark:divide-gray-800">
-          <CredentialComponent v-for="credential in credentials" :key="credential.credentials_id" :credential="credential" />
+          <Credential v-for="credential in credentials" :key="credential.credentials_id" :credential="credential" />
         </ul>
       </div>
 
@@ -23,26 +23,24 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import CredentialComponent from "../components/credential.vue";
-import { Credential } from "../services/interfaces";
+<script>
+import Credential from "../components/credential";
 
-export default Vue.expand({
+export default {
   components: {
-    CredentialComponent,
+    Credential,
   },
 
   computed: {
-    credentials(): Credential[] {
+    credentials() {
       return this.$store.getters.allCredentials;
     },
   },
 
-  mounted(): void {
-    this.$electron.ipcRenderer.on("goto-home", () => {
+  mounted() {
+    this.$electron.ipcRenderer.on("goto-home", (event) => {
       this.$router.push("/");
     });
   },
-});
+};
 </script>

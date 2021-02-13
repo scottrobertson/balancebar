@@ -38,15 +38,13 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
+<script>
 import { credentialsFromUrl } from "../services/truelayer-oauth";
 
-import Account from "../components/account.vue";
-import Header from "../components/home-header.vue";
-import { Credential, ReturnedAccount } from "../services/interfaces";
+import Account from "../components/account";
+import Header from "../components/home-header";
 
-export default Vue.extend({
+export default {
   name: "LandingPage",
 
   components: {
@@ -55,27 +53,27 @@ export default Vue.extend({
   },
 
   computed: {
-    hasTruelayerClient(): string {
+    hasTruelayerClient() {
       return this.$store.getters.hasTruelayerClient;
     },
-    credentials(): Credential[] {
+    credentials() {
       return this.$store.getters.allCredentials;
     },
-    accounts(): ReturnedAccount[] {
+    accounts() {
       return this.$store.getters.allAccounts;
     },
-    isConnecting(): boolean {
+    isConnecting() {
       return this.$store.getters.isConnecting;
     },
   },
 
   watch: {
-    lastRefreshedAt(newValue: string): void {
+    lastRefreshedAt(newValue, _oldValue) {
       this.updateLocalRefreshedAt(newValue);
     },
   },
 
-  async mounted(): Promise<void> {
+  async mounted() {
     await this.$store.dispatch("setConnecting", false);
 
     // Electron messages from menubar app
@@ -87,11 +85,11 @@ export default Vue.extend({
       this.resetAll();
     });
 
-    this.$electron.ipcRenderer.on("handle-oauth", (_event, url) => {
+    this.$electron.ipcRenderer.on("handle-oauth", (event, url) => {
       this.addCredentialsFromUrl(url);
     });
 
-    this.$electron.ipcRenderer.on("goto-connections", () => {
+    this.$electron.ipcRenderer.on("goto-connections", (event) => {
       this.$router.push("/connections");
     });
 
@@ -106,7 +104,7 @@ export default Vue.extend({
   },
 
   methods: {
-    async addCredentialsFromUrl(url: string): Promise<void> {
+    async addCredentialsFromUrl(url) {
       console.log("oAuth callback url received:", url);
 
       this.$store.dispatch("resetAccounts");
@@ -122,15 +120,15 @@ export default Vue.extend({
 
       await this.$store.dispatch("setConnecting", false);
     },
-    refreshAccounts(): void {
+    refreshAccounts() {
       this.$store.dispatch("refreshAccounts");
     },
-    resetAll(): void {
+    resetAll() {
       this.$store.dispatch("resetAll");
       this.$router.push("/truelayer");
     },
   },
-});
+};
 </script>
 
 <style scoped>
