@@ -30,16 +30,6 @@ View your bank balances in your Menu Bar using Open Banking.
 
 Head over to [Releases](https://github.com/scottrobertson/balancebar/releases) to download the application.
 
-#### Security Warning on MacOS
-
-If you get the following warning on MacOS, then please head to Settings -> Security & Privacy and click "Open Anyway" next to Balance Bar.
-
-```
-“Balance Bar” cannot be opened because the developer cannot be verified.
-```
-
-This error will be resolved at a future date when we start signing the MacOS app.
-
 ## Development
 
 ```bash
