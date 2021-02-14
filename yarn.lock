@@ -3591,7 +3591,7 @@ ejs@^3.1.5:
   dependencies:
     jake "^10.6.1"
 
-"electron-builder@git@github.com:scottrobertson/electron-builder.git@446910eeb5cc55bb4ebac7505d765fe6ca899015":
+"electron-builder@git@github.com:scottrobertson/electron-builder.git#446910eeb5cc55bb4ebac7505d765fe6ca899015":
   version "22.10.4"
   resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-22.10.4.tgz#e1f400cf41ebb632fbf79aa86c5e0ab1ea1ed7e5"
   integrity sha512-V+JtiizJd3kt24TT+0OHG7+oPAzjhhjmQVn9G6OC2WE7VBJxrDuD6lMVRgo6WlU8uvDCh7fTRUsdh0Tnu0GeQA==
