@@ -112,7 +112,7 @@
     "del": "^6",
     "devtron": "^1.4.0",
     "electron": "^11",
-    "electron-builder": "git@github.com:scottrobertson/electron-builder.git#446910eeb5cc55bb4ebac7505d765fe6ca899015",
+    "electron-builder": "^22",
     "electron-debug": "^3",
     "electron-devtools-installer": "^3",
     "electron-notarize": "^1.0.0",
