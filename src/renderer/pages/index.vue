@@ -96,8 +96,11 @@ export default {
     // Redirect if we don't have TrueLayer connected
     if (this.hasTruelayerClient) {
       if (!this.accounts) {
-        this.refreshAccounts();
+        await this.$store.dispatch("refreshAccounts");
       }
+
+      // Update every hour
+      setInterval(() => this.$store.dispatch("refreshAccounts"), 3600000);
     } else {
       this.$router.push("/truelayer");
     }
