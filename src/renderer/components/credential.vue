@@ -18,7 +18,7 @@
     <div v-if="debug" class="ml-5 mb-3 bg-gray-50 p-5 dark:bg-gray-800 dark:text-gray-100">
       <p>This is used by TrueLayer for them to debug issues. Do not sure it publically.</p>
       <div v-if="debugError" class="mt-3">Unable to fetch debug info.</div>
-      <pre class="mt-3 text-sm">{{ debug }}</pre>
+      <pre class="mt-3 text-sm select-all">{{ debug }}</pre>
     </div>
   </div>
 </template>
