@@ -20,6 +20,19 @@ app.once("ready", () => {
   if (process.env.NODE_ENV === "production") {
     console.log("Automatically checking for updates");
     autoUpdater.checkForUpdates();
+
+    if (!app.isInApplicationsFolder) {
+      const dialogOpts = {
+        type: "error",
+        buttons: ["Ok"],
+        title: "Balance Bar",
+        detail: "To use Balance Bar, you must first move it to your /Applications folder.",
+      };
+
+      dialog.showMessageBox(dialogOpts).then((returnValue) => {
+        app.quit();
+      });
+    }
   }
 
   const icon = nativeImage.createFromDataURL(base64Icon);
