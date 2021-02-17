@@ -7,7 +7,7 @@
     <div class="pl-5 pr-5 bg-white dark:bg-black dark:text-white mt-5">
       <p class="">To use Balance Bar, you must first connect to TrueLayer, an FCA authorised company, providing access to banking data.</p>
 
-      <p class="mt-5">Head over to TrueLayer and follow the signup process. Make note of your Client Secret.</p>
+      <p class="mt-5">Head over to TrueLayer and follow the signup process.</p>
 
       <p class="mt-5">
         <a class="cursor-pointer underline" @click="openLink('https://console.truelayer.com')">https://console.truelayer.com</a>
@@ -19,6 +19,8 @@
         Next, head to the <a class="cursor-pointer underline" @click="openLink('https://console.truelayer.com/settings/')">Data Settings</a> page, and add the following Redirect URI:
         <span class="select-all">balancebar://oauth</span>
       </p>
+
+      <p class="mt-5">Click the reset button under "client_secret". This will download your Live Client Secret.</p>
 
       <p class="mt-5">Once you have done that, copy the Client ID, and add it and your Client Secret to the form below.</p>
 
