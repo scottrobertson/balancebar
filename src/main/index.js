@@ -67,6 +67,14 @@ app.once("ready", () => {
       },
     },
     {
+      label: "TrueLayer Settings",
+      type: "normal",
+      click: () => {
+        mb.window.webContents.send("goto-truelayer");
+        mb.showWindow();
+      },
+    },
+    {
       label: "Full Reset",
       type: "normal",
       click: () => {

@@ -68,6 +68,8 @@
 </template>
 
 <script>
+import { getTruelayerSecret } from "../services/secure-storage";
+
 export default {
   data() {
     return {
@@ -77,14 +79,19 @@ export default {
   },
 
   computed: {
-    hasTruelayerCredentials() {
-      return this.$store.getters.hasTruelayerCredentials;
+    hasTruelayerClient() {
+      return this.$store.getters.hasTruelayerClient;
     },
   },
 
-  mounted() {
-    if (this.hasTruelayerCredentials) {
+  async created() {
+    this.$electron.ipcRenderer.on("goto-home", (event) => {
       this.$router.push("/");
+    });
+
+    if (this.hasTruelayerClient) {
+      this.clientId = this.$store.getters.truelayerClientId;
+      this.clientSecret = await getTruelayerSecret();
     }
   },
 

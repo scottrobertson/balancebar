@@ -93,6 +93,10 @@ export default {
       this.$router.push("/connections");
     });
 
+    this.$electron.ipcRenderer.on("goto-truelayer", (event) => {
+      this.$router.push("/truelayer");
+    });
+
     // Redirect if we don't have TrueLayer connected
     if (this.hasTruelayerClient) {
       if (!this.accounts) {
