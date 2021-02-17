@@ -63,8 +63,25 @@ export default {
     },
 
     async startTrueLayerAuth() {
+      const providers = [
+        "uk-ob-all",
+        "uk-oauth-all",
+        "uk-cs-mock",
+        "fr-ob-all",
+        "fr-stet-all",
+        "de-ob-all",
+        "de-xs2a-all",
+        "ie-ob-all",
+        "it-ob-all",
+        "it-xs2a-all",
+        "lt-xs2a-all",
+        "pl-polishapi-all",
+        "es-ob-all",
+        "es-xs2a-all",
+      ].join("%20");
+
       this.$electron.shell.openExternal(
-        `https://auth.truelayer.com/?response_type=code&client_id=${this.$store.getters.truelayerClientId}&scope=info%20accounts%20balance%20cards%20offline_access&redirect_uri=balancebar://oauth&providers=uk-ob-all%20uk-oauth-all%20uk-cs-mock`
+        `https://auth.truelayer.com/?response_type=code&client_id=${this.$store.getters.truelayerClientId}&scope=info%20accounts%20balance%20cards%20offline_access&redirect_uri=balancebar://oauth&providers=${providers}`
       );
     },
 
