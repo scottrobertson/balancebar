@@ -104,6 +104,8 @@ export default {
         clientId: this.clientId,
         clientSecret: this.clientSecret,
       });
+
+      this.$store.dispatch("refreshAccounts");
       this.$router.push("/");
     },
   },
