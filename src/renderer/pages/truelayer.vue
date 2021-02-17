@@ -4,14 +4,23 @@
       <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Setup TrueLayer</h3>
     </div>
 
-    <div class="pl-5 pr-5 bg-white dark:bg-black dark:text-white">
-      <p class="">Head over to TrueLayer and create an application. We need your Client ID/Secret.</p>
+    <div class="pl-5 pr-5 bg-white dark:bg-black dark:text-white mt-5">
+      <p class="">To use Balance Bar, you must first connect to TrueLayer, an FCA authorised company, providing access to banking data.</p>
+
+      <p class="mt-5">Head over to TrueLayer and follow the signup process. Make note of your Client Secret.</p>
 
       <p class="mt-5">
         <a class="cursor-pointer underline" @click="openLink('https://console.truelayer.com')">https://console.truelayer.com</a>
       </p>
 
-      <p class="mt-5">The redirect url should be: balancebar://oauth</p>
+      <p class="mt-5">Once you have setup your TrueLayer account, change to the Live environment by clicking the button at the top right of the TrueLayer Console.</p>
+
+      <p class="mt-5">
+        Next, head to the <a class="cursor-pointer underline" @click="openLink('https://console.truelayer.com/settings/')">Data Settings</a> page, and add the following Redirect URI:
+        <span class="select-all">balancebar://oauth</span>
+      </p>
+
+      <p class="mt-5">Once you have done that, copy the Client ID, and add it and your Client Secret to the form below.</p>
 
       <form @submit="saveCredentials">
         <div class="mt-5">
