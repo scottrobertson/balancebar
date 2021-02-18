@@ -128,8 +128,10 @@ app.once("ready", () => {
     },
   });
 
-  mb.app.on("open-url", function (event, data) {
+  mb.app.on("open-url", (event, data) => {
     event.preventDefault();
+
+    console.log("open-url received", data);
 
     mb.window.webContents.send("handle-oauth", data);
     mb.showWindow();
