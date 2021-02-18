@@ -16,14 +16,18 @@
       <span class="underline">Back To Balances</span>
     </div>
 
-    <div v-if="transactions">
-      <ul class="divide-y divide-gray-200 dark:divide-gray-800">
-        <Transaction v-for="transaction in transactions" :key="transaction.transaction_id" :account="account" :transaction="transaction" />
-      </ul>
+    <div v-if="account.transactionsEnabled">
+      <div v-if="transactions">
+        <ul class="divide-y divide-gray-200 dark:divide-gray-800">
+          <Transaction v-for="transaction in transactions" :key="transaction.transaction_id" :account="account" :transaction="transaction" />
+        </ul>
 
-      <p class="p-5 text-center text-xs text-gray-500 dark:text-gray-500">Showing the last 7 days of transactions</p>
+        <p class="p-5 text-center text-xs text-gray-500 dark:text-gray-500">Showing the last 7 days of transactions</p>
+      </div>
+      <Loader v-else />
     </div>
-    <Loader v-else />
+
+    <div v-else class="dark:text-white p-5">We don't have the permissions required to fetch transactions for this account. Please disconnect it and connect again.</div>
   </div>
 </template>
 
@@ -54,7 +58,9 @@ export default {
       this.$router.push("/");
     });
 
-    this.transactions = await this.$store.getters.getTransactions(this.account);
+    if (this.account.transactionsEnabled) {
+      this.transactions = await this.$store.getters.getTransactions(this.account);
+    }
   },
 };
 </script>

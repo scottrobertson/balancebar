@@ -63,7 +63,14 @@ export async function fetchAccountPendingTransactions(accountId, accessToken) {
 }
 
 export async function fetchCardPendingTransactions(cardId, accessToken) {
-  return await performGet(`/data/v1/cards/${cardId}/transactions/pending`, accessToken);
+  try {
+    return await performGet(`/data/v1/cards/${cardId}/transactions/pending`, accessToken);
+  } catch (e) {
+    console.log(e);
+    return {
+      results: [],
+    };
+  }
 }
 
 export async function fetchDebug(accessToken) {

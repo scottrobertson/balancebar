@@ -148,6 +148,7 @@ async function getAccountObject(type, credential, accessToken, object) {
     bank: bankObject(credential),
     name: object.display_name,
     balance: balance,
+    transactionsEnabled: credential.scopes.includes("transactions"),
   };
 }
 
