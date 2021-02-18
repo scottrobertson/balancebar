@@ -80,8 +80,10 @@ export default {
         "es-xs2a-all",
       ].join("%20");
 
+      const scopes = ["info", "accounts", "balance", "cards", "offline_access", "transactions"].join("%20");
+
       this.$electron.shell.openExternal(
-        `https://auth.truelayer.com/?response_type=code&client_id=${this.$store.getters.truelayerClientId}&scope=info%20accounts%20balance%20cards%20offline_access&redirect_uri=balancebar://oauth&providers=${providers}`
+        `https://auth.truelayer.com/?response_type=code&client_id=${this.$store.getters.truelayerClientId}&scope=${scopes}&redirect_uri=balancebar://oauth&providers=${providers}`
       );
     },
 

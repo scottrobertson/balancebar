@@ -1,6 +1,6 @@
 import { sortBy } from "lodash";
 import { storeRefreshToken, deleteTruelayerSecret, storeTruelayerSecret, deleteRefreshToken, deleteAccessToken } from "../../services/secure-storage.js";
-import { refreshAllAccounts } from "../../services/accounts.js";
+import { refreshAllAccounts, getAccountTransactions } from "../../services/accounts.js";
 
 const state = {
   accounts: undefined,
@@ -8,6 +8,7 @@ const state = {
   truelayerClientId: undefined,
   credentials: undefined,
   oAuthConnecting: false,
+  transactions: undefined,
 };
 
 const mutations = {
@@ -129,6 +130,13 @@ const getters = {
   },
   isConnecting(state) {
     return state.oAuthConnecting;
+  },
+  getAccount: (state) => (id) => {
+    return state.accounts.find((account) => account.id === id);
+  },
+  getTransactions: (state) => async (account) => {
+    const credentialsForAccount = state.credentials.find((c) => c.credentials_id === account.credentials_id);
+    return await getAccountTransactions(state.truelayerClientId, account, credentialsForAccount);
   },
 };
 

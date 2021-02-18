@@ -21,6 +21,11 @@ export default new Router({
       component: require("@/pages/truelayer").default,
     },
     {
+      path: "/transactions/:account_id",
+      name: "transactions",
+      component: require("@/pages/transactions").default,
+    },
+    {
       path: "*",
       redirect: "/",
     },
