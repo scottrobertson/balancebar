@@ -32,7 +32,7 @@
       </div>
     </div>
 
-    <div class="">
+    <div v-show="!account.error" class="">
       <svg
         class="cursor-pointer w-4 h-4 text-gray-400 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-400"
         fill="none"
