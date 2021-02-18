@@ -107,6 +107,10 @@ export default {
     }
   },
 
+  destroyed() {
+    this.$electron.ipcRenderer.removeAllListeners();
+  },
+
   methods: {
     async addCredentialsFromUrl(url) {
       console.log("oAuth callback url received:", url);

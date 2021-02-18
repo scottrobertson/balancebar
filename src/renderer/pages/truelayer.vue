@@ -97,6 +97,10 @@ export default {
     }
   },
 
+  destroyed() {
+    this.$electron.ipcRenderer.removeAllListeners();
+  },
+
   methods: {
     openLink(link) {
       this.$electron.shell.openExternal(link);

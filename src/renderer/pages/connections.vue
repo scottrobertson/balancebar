@@ -42,5 +42,9 @@ export default {
       this.$router.push("/");
     });
   },
+
+  destroyed() {
+    this.$electron.ipcRenderer.removeAllListeners();
+  },
 };
 </script>
