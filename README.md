@@ -1,30 +1,31 @@
-# Balance Bar App
+# Balance Bar
 
-View your bank balances in your Menu Bar using Open Banking.
+View your bank balances and transactions in your Menu Bar using Open Banking.
 
 <div align="center">
   <img
     max-width="400"
     width="45%"
     src="images/balance-menubar-light.png"
-    alt="Balance Menu Bar in light mode"
+    alt="Balance Bar in light mode"
   >
   <img
     max-width="400"
     width="45%"
     src="images/balance-menubar-dark.png"
-    alt="Balance Menu Bar in dark mode"
+    alt="Balance Bar in dark mode"
   >
 </div>
 
 - Uses Open Banking (via TrueLayer)
 - All data is stored and processed locally, no third party servers involved (other than TrueLayer, obviously)
 - Secrets stored in Keychain
-- Supports all TrueLayer supported banks
-- Dark mode
+- Supports all TrueLayer supported banks in the UK, France, Germany, Spain and more.
+- Automatic Dark Mode
 - Refresh balances on-demand, or every hour automatically
 - Multiple accounts per bank
-- Click account to copy balance
+- Easily copy your balance
+- View your latest 7 days of transactions
 
 ## Download
 
