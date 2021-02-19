@@ -12,7 +12,7 @@
       </div>
     </div>
 
-    <div class="bg-gray-100 dark:bg-gray-800 dark:text-gray-300 text-gray-500 p-5 ml-0.5 mr-0.5 cursor-pointer text-center" @click="$router.push('/')">
+    <div class="bg-gray-100 text-sm dark:bg-gray-800 dark:text-gray-300 text-gray-500 p-3 ml-0.5 mr-0.5 cursor-pointer text-center" @click="$router.push('/')">
       <span class="underline">Back To Balances</span>
     </div>
 
