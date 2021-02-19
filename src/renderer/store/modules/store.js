@@ -54,8 +54,8 @@ const mutations = {
     // Ensure credentials are never added twice
     const credentialExists = state.credentials.find((c) => c.credentials_id === oauth.credentials.credentials_id);
     if (!credentialExists) {
-      state.credentials.push(oauth.credentials);
       await storeRefreshToken(oauth.credentials, oauth.refreshToken);
+      state.credentials.push(oauth.credentials);
     }
   },
 

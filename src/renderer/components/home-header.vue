@@ -7,7 +7,7 @@
 
           <template v-if="credentials">
             <template v-if="lastRefreshed && accounts">
-              <div class="text-gray-400 text-xs flex">
+              <div class="text-gray-400 text-xs flex mt-1.5">
                 <div>Updated {{ lastRefreshed }}</div>
                 <svg class="cursor-pointer w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" @click="refreshAccounts">
                   <path
@@ -25,7 +25,8 @@
             </template>
           </template>
         </div>
-        <div class="ml-4 mt-2 flex-shrink-0 pt-2">
+
+        <div v-if="!credentials || accounts" class="ml-4 mt-2 flex-shrink-0 pt-2">
           <button
             type="button"
             class="relative inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black dark:bg-gray-700 hover:bg-gray-800 focus:outline-none"
