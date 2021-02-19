@@ -21,7 +21,8 @@ app.once("ready", () => {
     console.log("Automatically checking for updates");
     autoUpdater.checkForUpdates();
 
-    if (!app.isInApplicationsFolder) {
+    // On MacOS, ensure that the app is in /Applications
+    if (process.platform == "darwin" && !app.isInApplicationsFolder) {
       const dialogOpts = {
         type: "error",
         buttons: ["Ok"],
