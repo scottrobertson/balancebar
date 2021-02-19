@@ -144,19 +144,6 @@ app.once("ready", () => {
 
 autoUpdater.on("update-available", () => {
   console.log("Update available");
-
-  const dialogOpts = {
-    type: "info",
-    buttons: ["Download", "Maybe Later"],
-    title: "Balance Bar Update Available",
-    detail: "A new version of Balance Bar is available, do you want to download it?",
-  };
-
-  dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) {
-      shell.openExternal("https://github.com/scottrobertson/balancebar/releases/latest");
-    }
-  });
 });
 
 autoUpdater.on("update-not-available", () => {
@@ -165,4 +152,17 @@ autoUpdater.on("update-not-available", () => {
 
 autoUpdater.on("update-downloaded", () => {
   console.log("Update downloaded");
+
+  const dialogOpts = {
+    type: "question",
+    buttons: ["Install Now", "Install On Restart"],
+    title: "Balance Bar Update Available",
+    detail: "A new version of Balance Bar is available, do you want to install it now?",
+  };
+
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0) {
+      autoUpdater.quitAndInstall();
+    }
+  });
 });
