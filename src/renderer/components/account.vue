@@ -12,7 +12,7 @@
         <p class="text-sm text-gray-500 dark:text-gray-300" :class="{ 'dark:text-white': account.error }">
           <span v-if="screenshotMode">£123.45</span>
           <span v-else-if="account.error">{{ account.error }}</span>
-          <span v-else class="flex" @click.stop="copyBalance()">
+          <span v-else class="flex" @click="copyBalance()">
             <span class="cursor-pointer">{{ account.balance }}</span>
 
             <svg v-show="hovered" class="cursor-pointer ml-1 mt-0.5 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

@@ -1,4 +1,6 @@
-import { getRefreshToken, storeAccessToken, storeRefreshToken } from "./secure-storage.js";
+import moment from "moment";
+
+import { getRefreshToken, storeAccessToken, getAccessToken, storeRefreshToken } from "./secure-storage.js";
 
 import {
   fetchAccountBalance,
@@ -13,6 +15,7 @@ import {
 
 import { refreshAccessToken } from "./truelayer-oauth.js";
 import { orderBy, reject } from "lodash";
+import { access } from "original-fs";
 
 export async function refreshAllAccounts(truelayerClientId, credentials) {
   let allAccounts = [];
@@ -31,7 +34,7 @@ export async function refreshAllAccounts(truelayerClientId, credentials) {
 
 export async function getAccountTransactions(truelayerClientId, account, credential) {
   const refreshToken = await getRefreshToken(credential);
-  const accessToken = await getAccessToken(truelayerClientId, credential, refreshToken);
+  const accessToken = await getActiveAccessToken(truelayerClientId, credential, refreshToken);
 
   let clearedTransactions;
   let pendingTransactions;
@@ -50,9 +53,7 @@ export async function getAccountTransactions(truelayerClientId, account, credent
   pendingTransactions = pendingTransactionsResponse.results;
 
   pendingTransactions = reject(pendingTransactions, (transaction) => transaction.amount == 0);
-  pendingTransactions.forEach(function (transaction) {
-    transaction.pending = true;
-  });
+  pendingTransactions.forEach((transaction) => (transaction.pending = true));
 
   return orderBy([...pendingTransactions, ...clearedTransactions], ["timestamp"], ["desc"]);
 }
@@ -73,16 +74,29 @@ function noBalanceAccountObject(credential, error = "We have not been able to fe
   };
 }
 
-async function getAccessToken(truelayerClientId, credential, refreshToken) {
+async function getActiveAccessToken(truelayerClientId, credential, refreshToken) {
   console.log(`[${credential.credentials_id}] Fetching access token`);
+
+  const currentAccessToken = await getAccessToken(credential);
+  if (currentAccessToken) {
+    const accessTokenExpires = moment(currentAccessToken.expiresAt);
+    if (accessTokenExpires.isAfter(moment())) {
+      console.log(`[${credential.credentials_id}] Using stored access token`);
+      return currentAccessToken.accessToken;
+    }
+  }
+  console.log(`[${credential.credentials_id}] Refreshing access token`);
   const refreshedToken = await refreshAccessToken(truelayerClientId, refreshToken);
 
-  if (refreshedToken.refresh_token !== refreshToken) {
+  if (refreshedToken.refreshToken !== refreshToken) {
     console.log(`[${credential.credentials_id}] Updating stored refresh token`);
-    await storeRefreshToken(credential, refreshedToken.refresh_token);
+    await storeRefreshToken(credential, refreshedToken.refreshToken);
   }
 
-  return refreshedToken.access_token;
+  const expiresAt = moment().add("seconds", refreshedToken.expiresIn).toDate();
+  await storeAccessToken(credential, refreshedToken.accessToken, expiresAt);
+
+  return refreshedToken.accessToken;
 }
 
 async function getAccountsForCredential(truelayerClientId, credential) {
@@ -95,8 +109,7 @@ async function getAccountsForCredential(truelayerClientId, credential) {
 
   if (refreshToken) {
     try {
-      accessToken = await getAccessToken(truelayerClientId, credential, refreshToken);
-      await storeAccessToken(credential, accessToken); // We store this for debugging later. It's not used directly yet.
+      accessToken = await getActiveAccessToken(truelayerClientId, credential, refreshToken);
     } catch (e) {
       console.error(`[${credential.credentials_id}] Unable to get access token: `, e.error);
       accounts.push(noBalanceAccountObject(credential, "We have been unable to refresh the access tokens, please disconnect and try again."));

@@ -28,7 +28,7 @@
         <Loader v-else-if="accounts === undefined" />
       </div>
 
-      <div v-else class="p-5 dark:text-white">No credentials here. Add one!</div>
+      <div v-else class="p-5 dark:text-white text-center">You have not added any bank accounts yet. Get started by clicking the button above.</div>
     </div>
   </div>
 </template>

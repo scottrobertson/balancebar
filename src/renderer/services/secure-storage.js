@@ -13,12 +13,14 @@ export async function deleteRefreshToken(credentials) {
   return await keytar.deletePassword(KEYCHAIN_NAMESPACE, `credentials_${credentials.credentials_id}_refresh_token`);
 }
 
-export async function storeAccessToken(credentials, accessToken) {
-  return await keytar.setPassword(KEYCHAIN_NAMESPACE, `credentials_${credentials.credentials_id}_access_token`, accessToken);
+export async function storeAccessToken(credentials, accessToken, expiresAt) {
+  const store = { accessToken, expiresAt };
+  return await keytar.setPassword(KEYCHAIN_NAMESPACE, `credentials_${credentials.credentials_id}_access_token`, JSON.stringify(store));
 }
 
 export async function getAccessToken(credentials) {
-  return await keytar.getPassword(KEYCHAIN_NAMESPACE, `credentials_${credentials.credentials_id}_access_token`);
+  const accessToken = await keytar.getPassword(KEYCHAIN_NAMESPACE, `credentials_${credentials.credentials_id}_access_token`);
+  return JSON.parse(accessToken);
 }
 
 export async function deleteAccessToken(credentials) {

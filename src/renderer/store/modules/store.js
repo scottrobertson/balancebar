@@ -8,12 +8,13 @@ const state = {
   truelayerClientId: undefined,
   credentials: undefined,
   oAuthConnecting: false,
-  transactions: undefined,
+  transactions: {},
 };
 
 const mutations = {
   resetAccounts(state) {
     state.accounts = undefined;
+    state.transactions = {};
   },
 
   async resetCredentials(state) {
@@ -62,6 +63,10 @@ const mutations = {
     state.lastRefreshedAt = timestamp;
   },
 
+  setTransactions(state, { accountId, transactions }) {
+    state.transactions[accountId] = transactions;
+  },
+
   async setTrueLayer(state, truelayer) {
     state.truelayerClientId = truelayer.clientId;
 
@@ -97,16 +102,35 @@ const actions = {
     dispatch("refreshAccounts");
   },
 
-  deleteCredential({ commit, dispatch }, credential) {
+  deleteCredential({ commit }, credential) {
     commit("deleteCredential", credential);
   },
 
-  async refreshAccounts({ state, commit }) {
+  async refreshAccounts({ state, commit, dispatch }) {
     commit("resetAccounts");
     commit("setLastRefreshedAt", undefined);
 
-    commit("setAccounts", await refreshAllAccounts(state.truelayerClientId, state.credentials));
+    const accounts = await refreshAllAccounts(state.truelayerClientId, state.credentials);
+    commit("setAccounts", accounts);
     commit("setLastRefreshedAt", new Date());
+
+    accounts.forEach(async (account) => {
+      await dispatch("getTransactions", account);
+    });
+  },
+
+  async getTransactions({ commit, state }, account) {
+    if (!state.transactions[account.id]) {
+      const credentialsForAccount = state.credentials.find((c) => c.credentials_id === account.credentials_id);
+      if (credentialsForAccount) {
+        commit("setTransactions", {
+          accountId: account.id,
+          transactions: await getAccountTransactions(state.truelayerClientId, account, credentialsForAccount),
+        });
+      }
+    }
+
+    return state.transactions[account.id];
   },
 };
 
@@ -133,10 +157,6 @@ const getters = {
   },
   getAccount: (state) => (id) => {
     return state.accounts.find((account) => account.id === id);
-  },
-  getTransactions: (state) => async (account) => {
-    const credentialsForAccount = state.credentials.find((c) => c.credentials_id === account.credentials_id);
-    return await getAccountTransactions(state.truelayerClientId, account, credentialsForAccount);
   },
 };
 

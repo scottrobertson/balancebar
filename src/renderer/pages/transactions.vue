@@ -17,17 +17,21 @@
     </div>
 
     <div v-if="account.transactionsEnabled">
-      <div v-if="transactions">
-        <ul class="divide-y divide-gray-200 dark:divide-gray-800">
-          <Transaction v-for="transaction in transactions" :key="transaction.transaction_id" :account="account" :transaction="transaction" />
-        </ul>
+      <template v-if="transactions">
+        <template v-if="transactions.length > 0">
+          <ul class="divide-y divide-gray-200 dark:divide-gray-800">
+            <Transaction v-for="transaction in transactions" :key="transaction.transaction_id" :account="account" :transaction="transaction" />
+          </ul>
 
-        <p class="p-5 text-center text-xs text-gray-500 dark:text-gray-500">Showing the last 7 days of transactions</p>
-      </div>
+          <p class="p-5 text-center text-xs text-gray-500 dark:text-gray-500">Showing the last 7 days of transactions</p>
+        </template>
+
+        <div v-else class="dark:text-white p-3 text-center m-5">No transactions found within the last 7 days.</div>
+      </template>
       <Loader v-else />
     </div>
 
-    <div v-else class="dark:text-white p-5">We don't have the permissions required to fetch transactions for this account. Please disconnect it and connect again.</div>
+    <div v-else class="dark:text-white p-5 text-center">We don't have the permissions required to fetch transactions for this account. Please disconnect it and connect again.</div>
   </div>
 </template>
 
@@ -59,7 +63,7 @@ export default {
     });
 
     if (this.account.transactionsEnabled) {
-      this.transactions = await this.$store.getters.getTransactions(this.account);
+      this.transactions = await this.$store.dispatch("getTransactions", this.account);
     }
   },
 };

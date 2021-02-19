@@ -15,9 +15,11 @@
 
       <p class="mt-5">Once you have setup your TrueLayer account, change to the Live environment by clicking the button at the top right of the TrueLayer Console.</p>
 
+      <p class="mt-5">Next, head to the <a class="cursor-pointer underline" @click="openLink('https://console.truelayer.com/settings/')">Data Settings</a> page, and add the following Redirect URI:</p>
+
       <p class="mt-5">
-        Next, head to the <a class="cursor-pointer underline" @click="openLink('https://console.truelayer.com/settings/')">Data Settings</a> page, and add the following Redirect URI:
-        <span class="select-all">balancebar://oauth</span>
+        <span class="border-b-2 border-dotted select-all" @click.stop="copyCallbackUrl()">{{ callbackUrl }}</span>
+        <span v-if="callbackUrlCopied"> - copied</span>
       </p>
 
       <p class="mt-5">Click the reset button under "client_secret". This will download your Live Client Secret.</p>
@@ -33,7 +35,7 @@
               v-model="clientId"
               type="text"
               name="client_id"
-              class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md dark:text-black"
+              class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border-gray-300 rounded-md dark:text-black"
               placeholder="TrueLayer Client ID"
             />
           </div>
@@ -47,7 +49,7 @@
               v-model="clientSecret"
               type="password"
               name="client_secret"
-              class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md dark:text-black"
+              class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border-gray-300 rounded-md dark:text-black"
               placeholder="TrueLayer Client Secret"
             />
           </div>
@@ -56,7 +58,7 @@
         <div class="mt-5">
           <button
             type="button"
-            class="w-full text-center py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="w-full text-center px-2 py-3 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black dark:bg-gray-700 hover:bg-gray-800 focus:outline-none"
             @click="saveCredentials"
           >
             Save Credentials
@@ -65,7 +67,7 @@
       </form>
     </div>
 
-    <div class="text-xs text-gray-400 dark:text-gray-400 p-5">Your secret will be encrypted in your system's keychain.</div>
+    <div class="text-xs text-center text-gray-400 dark:text-gray-400 p-5">Your secret will be encrypted in your system's keychain.</div>
   </div>
 </template>
 
@@ -75,8 +77,10 @@ import { getTruelayerSecret } from "../services/secure-storage";
 export default {
   data() {
     return {
+      callbackUrl: "balancebar://oauth",
       clientId: undefined,
       clientSecret: undefined,
+      callbackUrlCopied: false,
     };
   },
 
@@ -102,6 +106,16 @@ export default {
   },
 
   methods: {
+    copyCallbackUrl() {
+      this.$copyText(this.callbackUrl).then((e) => {
+        this.callbackUrlCopied = true;
+
+        setTimeout(() => {
+          this.callbackUrlCopied = false;
+        }, 2000);
+      });
+    },
+
     openLink(link) {
       this.$electron.shell.openExternal(link);
     },

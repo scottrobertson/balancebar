@@ -44,9 +44,11 @@ export async function refreshAccessToken(truelayerClientId, refreshToken) {
 
   const response = await request.post(requestOptions);
   const parsedResponse = JSON.parse(response);
+
   return {
-    access_token: parsedResponse.access_token,
-    refresh_token: parsedResponse.refresh_token,
+    accessToken: parsedResponse.access_token,
+    refreshToken: parsedResponse.refresh_token,
+    expiresIn: parsedResponse.expires_in,
   };
 }
 
