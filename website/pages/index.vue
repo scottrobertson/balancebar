@@ -129,8 +129,8 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
             <div class="ml-3">
-              <dt class="text-lg leading-6 font-medium text-gray-900">Dark Mode</dt>
-              <dd class="mt-2 text-base text-gray-500">The app will automatically switch to dark mode when your computer does.</dd>
+              <dt class="text-lg leading-6 font-medium text-gray-900">Recent Transactions</dt>
+              <dd class="mt-2 text-base text-gray-500">View your latest 7 days of transactions.</dd>
             </div>
           </div>
         </dl>
