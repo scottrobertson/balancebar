@@ -56,7 +56,7 @@ export default {
         this.debug = "Requesting debug info...";
 
         try {
-          this.debug = await fetchDebug(accessToken);
+          this.debug = await fetchDebug(accessToken.accessToken);
         } catch (e) {
           this.debug = e.error;
           this.debugError = true;
