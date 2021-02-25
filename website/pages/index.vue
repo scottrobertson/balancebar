@@ -1,5 +1,7 @@
 <template>
   <div>
+    <Install :show="showDownloadModal" @closed="showDownloadModal = false" />
+
     <!-- Cloudflare Web Analytics -->
     <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "85f63cfe2cde479c852180d29cc857cf"}'></script>
     <!-- End Cloudflare Web Analytics -->
@@ -14,11 +16,12 @@
                 <p class="mt-6 text-xl text-gray-500">View your bank balances in your menu bar. Powered by Open Banking.</p>
               </div>
               <div class="mt-12">
-                <a
-                  href="https://github.com/scottrobertson/balancebar/releases/latest"
+                <button
                   class="text-center block w-full rounded-md border border-transparent px-5 py-3 bg-black text-base font-medium text-white shadow hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 sm:px-10"
-                  >Download Now</a
+                  @click="showDownloadModal = true"
                 >
+                  Download
+                </button>
               </div>
             </div>
           </div>
@@ -38,13 +41,8 @@
               </svg>
             </div>
             <div class="relative pl-4 -mr-40 sm:mx-auto sm:max-w-3xl sm:px-0 lg:max-w-none lg:h-full lg:pl-12 flex">
-              <div
-                class="flex relative rounded-md shadow-xl ring-1 ring-black ring-opacity-5"
-                <img
-                class="w-full lg:h-full lg:w-auto lg:max-w-none"
-                src="~/assets/balance-menubar-light.png?raw=true"
-                alt=""
-              >
+              <div class="flex relative rounded-md ring-opacity-5">
+                <img class="w-full lg:h-full lg:w-auto lg:max-w-none" src="~/assets/balance-menubar-light.png?raw=true" alt="" />
                 <img class="w-full lg:h-full lg:w-auto lg:max-w-none" src="~/assets/balance-menubar-dark.png?raw=true" alt="" />
               </div>
             </div>
@@ -169,6 +167,11 @@
 
 <script>
 export default {
+  data() {
+    return {
+      showDownloadModal: false,
+    };
+  },
   head() {
     return {
       title: "Balance Bar - View your bank balances in your menu bar",

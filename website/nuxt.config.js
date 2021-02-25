@@ -1,4 +1,5 @@
 export default {
-  target: 'static',
-  buildModules: ['@nuxtjs/tailwindcss']
-}
+  target: "static",
+  buildModules: ["@nuxtjs/tailwindcss"],
+  components: true,
+};
