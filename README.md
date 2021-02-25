@@ -27,9 +27,19 @@ View your bank balances and transactions in your Menu Bar using Open Banking.
 - Easily copy your balance
 - View your latest 7 days of transactions
 
-## Download
+## Install
 
-Head over to [Releases](https://github.com/scottrobertson/balancebar/releases) to download the application.
+### Homebrew
+
+You can install Balance Bar via Homebrew by running:
+
+```bash
+brew install --cask scottrobertson/tap/balancebar
+```
+
+### Download
+
+If you want to install it manually, head over to [Releases](https://github.com/scottrobertson/balancebar/releases) to download the application.
 
 ## Development
 
