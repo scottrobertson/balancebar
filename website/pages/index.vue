@@ -157,7 +157,7 @@
             </a>
           </div>
           <div class="mt-8 md:mt-0 md:order-1">
-            <p class="text-center text-base text-gray-400">Built by <a class="cursor-pointer underline" href="https://scottrobertson.me">Scott Robertson</a></p>
+            <p class="text-center text-base text-gray-400">Built by <a class="cursor-pointer underline" href="https://scott.dev">Scott Robertson</a></p>
           </div>
         </div>
       </footer>
